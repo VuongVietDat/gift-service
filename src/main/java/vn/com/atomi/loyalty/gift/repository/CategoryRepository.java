@@ -1,6 +1,7 @@
 package vn.com.atomi.loyalty.gift.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import vn.com.atomi.loyalty.gift.enums.Status;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
   Optional<Category> findByDeletedFalseAndId(Long id);
+
+  List<Category> findByStatus(Status status);
 
   @Query(
       value =

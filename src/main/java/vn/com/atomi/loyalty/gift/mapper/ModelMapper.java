@@ -87,4 +87,5 @@ public interface ModelMapper {
       List<CategoryApprovalProjection> content);
 
   List<CategoryOutput> convertToCategoryApprovalOutputs(List<Category> content);
+  List<InternalCategoryOutput> convertToInternalCategoryOutputs(List<Category> content);
 }

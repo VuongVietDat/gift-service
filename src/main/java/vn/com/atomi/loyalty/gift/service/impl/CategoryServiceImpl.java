@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -206,7 +207,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
     }
     // tìm kiếm bản ghi đã phê duyệt gần nhất
     var oldApproval =
-            categoryApprovalRepository
+        categoryApprovalRepository
             .findLatestAcceptedRecord(newApproval.getCategoryId(), id)
             .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
     // thực hiện so sánh
@@ -236,6 +237,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
   @Override
   public List<InternalCategoryOutput> getInternalCategories() {
-    return null;
+    var records = categoryRepository.findByStatus(Status.ACTIVE);
+    return modelMapper.convertToInternalCategoryOutputs(records);
   }
 }
