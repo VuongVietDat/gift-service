@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import vn.com.atomi.loyalty.base.data.ResponsePage;
 import vn.com.atomi.loyalty.gift.dto.input.ApprovalInput;
 import vn.com.atomi.loyalty.gift.dto.input.CategoryInput;
+import vn.com.atomi.loyalty.gift.dto.output.CategoryApprovalOutput;
 import vn.com.atomi.loyalty.gift.dto.output.CategoryOutput;
 import vn.com.atomi.loyalty.gift.dto.output.ComparisonOutput;
 import vn.com.atomi.loyalty.gift.dto.output.InternalCategoryOutput;
@@ -20,7 +21,7 @@ public interface CategoryService {
 
   void createCategory(CategoryInput categoryInput);
 
-  ResponsePage<CategoryOutput> getCategoryApprovals(
+  ResponsePage<CategoryApprovalOutput> getCategoryApprovals(
       Status status,
       ApprovalStatus approvalStatus,
       ApprovalType approvalType,
@@ -30,7 +31,7 @@ public interface CategoryService {
       String code,
       Pageable pageable);
 
-  CategoryOutput getCategoryApproval(Long id);
+  CategoryApprovalOutput getCategoryApproval(Long id);
 
   ResponsePage<CategoryOutput> getCategories(
       Status status, String name, String code, Pageable pageable);

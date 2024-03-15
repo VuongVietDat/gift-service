@@ -3,6 +3,8 @@ package vn.com.atomi.loyalty.gift.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +14,7 @@ import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ApprovalInput;
 import vn.com.atomi.loyalty.gift.dto.input.CategoryInput;
+import vn.com.atomi.loyalty.gift.dto.output.CategoryApprovalOutput;
 import vn.com.atomi.loyalty.gift.dto.output.CategoryOutput;
 import vn.com.atomi.loyalty.gift.dto.output.ComparisonOutput;
 import vn.com.atomi.loyalty.gift.dto.output.InternalCategoryOutput;
@@ -33,14 +36,14 @@ public class CategoryController extends BaseController {
   @Operation(summary = "APi tạo mới danh mục (bản ghi chờ duyệt)")
   @PostMapping("/categories/approvals")
   public ResponseEntity<ResponseData<Void>> createCategory(
-      @RequestBody CategoryInput categoryInput) {
+      @RequestBody @Valid CategoryInput categoryInput) {
     categoryService.createCategory(categoryInput);
     return ResponseUtils.success();
   }
 
   @Operation(summary = "Api lấy danh sách duyệt danh mục")
   @GetMapping("/categories/approvals")
-  public ResponseEntity<ResponseData<ResponsePage<CategoryOutput>>> getCategoryApprovals(
+  public ResponseEntity<ResponseData<ResponsePage<CategoryApprovalOutput>>> getCategoryApprovals(
       @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
       @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
           Integer pageSize,
@@ -84,7 +87,7 @@ public class CategoryController extends BaseController {
 
   @Operation(summary = "Api lấy chi tiết bản ghi duyệt danh mục theo id")
   @GetMapping("/categories/approvals/{id}")
-  public ResponseEntity<ResponseData<CategoryOutput>> getCategoryApproval(
+  public ResponseEntity<ResponseData<CategoryApprovalOutput>> getCategoryApproval(
       @Parameter(description = "ID bản ghi chờ duyệt") @PathVariable Long id) {
     return ResponseUtils.success(categoryService.getCategoryApproval(id));
   }

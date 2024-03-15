@@ -1,6 +1,8 @@
 package vn.com.atomi.loyalty.gift.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.*;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
@@ -54,4 +56,10 @@ public class Category extends BaseEntity {
 
   @Column(name = "creation_approval_date")
   private LocalDateTime creationApprovalDate;
+
+  @Column(name = "start_date")
+  private LocalDate startDate;
+
+  @Column(name = "end_date")
+  private LocalDate endDate;
 }

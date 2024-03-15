@@ -1,12 +1,19 @@
 package vn.com.atomi.loyalty.gift.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
+import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
 import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
 import vn.com.atomi.loyalty.gift.enums.ApprovalType;
 import vn.com.atomi.loyalty.gift.enums.CategoryType;
 import vn.com.atomi.loyalty.gift.enums.Status;
+
+import java.time.LocalDate;
 
 /**
  * @author haidv
@@ -39,6 +46,61 @@ public class CategoryApproval extends BaseEntity {
   @Column(name = "code")
   private String code;
 
+  @Column(name = "type")
+  private String type;
+
+  @Column(name = "service")
+  private String service;
+
+  @Column(name = "discount_type")
+  private String discountType;
+
+  @Column(name = "discount_value")
+  private String discountValue;
+
+  @Column(name = "start_date")
+  private LocalDate startDate;
+
+  @Column(name = "end_date")
+  private LocalDate endDate;
+
+  @Column(name = "discount_max")
+  private Long discountMax;
+
+  @Column(name = "gift_count")
+  private Long giftCount;
+
+  @Column(name = "description")
+  private String description;
+
+  @Column(name = "bill_value_min")
+  private Long billValueMin;
+
+  @Column(name = "bill_value_max")
+  private Long billValueMax;
+
+  @Column(name = "sale_start_date")
+  private String saleStartDate;
+
+  @Column(name = "sale_end_date")
+  private String saleEndDate;
+
+  @Column(name = "rank")
+  private String rank;
+
+  @Column(name = "need_approval")
+  private Boolean needApproval;
+
+  @Column(name = "limit_gift_per_user")
+  private Long limitGiftPerUser;
+
+  @Column(name = "scores")
+  private Long scores;
+
+  @Column(name = "apply_users")
+  @NotNull
+  private String applyUsers;
+
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
   private Status status;
@@ -60,4 +122,7 @@ public class CategoryApproval extends BaseEntity {
 
   @Column(name = "approval_comment")
   private String approvalComment;
+
+  @Column(name = "approver")
+  private String approver;
 }

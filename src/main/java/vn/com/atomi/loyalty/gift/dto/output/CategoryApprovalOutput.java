@@ -1,4 +1,4 @@
-package vn.com.atomi.loyalty.gift.dto.input;
+package vn.com.atomi.loyalty.gift.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -8,15 +8,19 @@ import lombok.Getter;
 import lombok.Setter;
 import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
 import vn.com.atomi.loyalty.base.constant.DateConstant;
+import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
+import vn.com.atomi.loyalty.gift.enums.ApprovalType;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
-/**
- * @author haidv
- * @version 1.0
- */
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Setter
 @Getter
-public class CategoryInput {
+public class CategoryApprovalOutput {
+  @Schema(description = "ID bản ghi")
+  private Long id;
+
   @Schema(description = "Tên danh mục")
   @NotBlank
   @Size(max = 168)
@@ -91,7 +95,29 @@ public class CategoryInput {
   @NotNull
   private Status status;
 
-  @Schema(description = "Người dùng được đổi", example = "CIF1, CIF2,...")
+  @Schema(description = "Danh sách Người dùng được đổi", example = "CIF1, CIF2,...")
   @NotNull
-  private String applyUsers;
+  private List<String> applyUsernames;
+
+  @Schema(description = "Người tạo")
+  private String creator;
+
+  @Schema(description = "Ngày tạo")
+  private LocalDateTime creationDate;
+
+  @Schema(
+      description =
+          "Trạng thái phê duyệt:</br> WAITING: Chờ duyệt</br> ACCEPTED: Đồng ý</br> REJECTED: Từ chối</br> RECALL: Thu hồi")
+  private ApprovalStatus approvalStatus;
+
+  @Schema(
+      description =
+          "Loại phê duyệt: </br>CREATE: Phê duyệt tạo</br>UPDATE: Phê duyệt cập nhật</br>CANCEL: Phê duyệt hủy bỏ")
+  private ApprovalType approvalType;
+
+  @Schema(description = "Lý do đồng ý hoặc từ chối")
+  private String approvalComment;
+
+  @Schema(description = "Người duyệt")
+  private String approver;
 }

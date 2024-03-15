@@ -9,6 +9,9 @@ import vn.com.atomi.loyalty.base.exception.AbstractError;
  */
 public enum ErrorCode implements AbstractError {
   APPROVING_RECORD_NOT_EXISTED(1000, "Không tìm thấy bản ghi chờ duyệt.", HttpStatus.NOT_FOUND),
+  RECORD_NOT_EXISTED(1001, "Không tìm thấy bản ghi.", HttpStatus.NOT_FOUND),
+  APPROVE_TYPE_NOT_MATCH_UPDATE(
+      1002, "Chỉ so sánh khi loại phê duyệt là cập nhật.", HttpStatus.BAD_REQUEST),
   ;
 
   private final int code;
