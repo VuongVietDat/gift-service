@@ -74,7 +74,7 @@ public class GiftController extends BaseController {
   @Operation(summary = "Api (nội bộ) lấy tất cả quà hiệu lực")
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @GetMapping("/internal/gifts")
-  public ResponseEntity<ResponseData<List<GiftOutput>>> getInternalCategories(
+  public ResponseEntity<ResponseData<ResponsePage<GiftOutput>>> getInternalCategories(
       @Parameter(
               description = "Chuỗi xác thực khi gọi api nội bộ",
               example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")

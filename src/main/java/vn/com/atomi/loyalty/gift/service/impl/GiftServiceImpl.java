@@ -1,6 +1,5 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,8 +9,6 @@ import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 import vn.com.atomi.loyalty.gift.entity.CategoryApproval;
-import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
-import vn.com.atomi.loyalty.gift.enums.ApprovalType;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.Status;
 import vn.com.atomi.loyalty.gift.repository.CategoryRepository;
@@ -88,10 +85,10 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   }
 
   @Override
-  public List<GiftOutput> getInternal(Long categoryId, Pageable pageable) {
+  public ResponsePage<GiftOutput> getInternal(Long categoryId, Pageable pageable) {
     // load cache
     var cache = giftCacheRepository.gets(categoryId);
-    if (!cache.isEmpty()) return cache;
+    if (cache.isPresent()) return cache.get();
 
     // load DB
     var page =
@@ -101,9 +98,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
 
     var outputs = modelMapper.convertToGiftOutputs(page.getContent());
 
-    // save cache
-    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputs);
+    var outputPage = new ResponsePage<>(page, outputs);
 
-    return outputs;
+    // save cache
+    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
+
+    return outputPage;
   }
 }

@@ -28,5 +28,5 @@ public interface GiftService {
 
   void update(Long id, GiftInput input);
 
-  List<GiftOutput> getInternal(Long categoryId, Pageable pageable);
+  ResponsePage<GiftOutput> getInternal(Long categoryId, Pageable pageable);
 }
