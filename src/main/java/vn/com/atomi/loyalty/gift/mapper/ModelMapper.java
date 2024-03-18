@@ -1,10 +1,13 @@
 package vn.com.atomi.loyalty.gift.mapper;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mapstruct.*;
+import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.*;
 import vn.com.atomi.loyalty.gift.entity.Category;
+import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
 
 /**
@@ -43,4 +46,16 @@ public interface ModelMapper {
   }
 
   List<CategoryOutput> convertToCategoryOutput(List<Category> content);
+
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "code", source = "code")
+  @Mapping(target = "startDate", source = "startDate")
+  @Mapping(target = "endDate", source = "endDate")
+  Gift convertToGift(GiftInput input, LocalDate startDate, LocalDate endDate, Long id, String code);
+
+  GiftOutput convertToGiftOutput(Gift gift);
+
+  List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
+
+  Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
 }
