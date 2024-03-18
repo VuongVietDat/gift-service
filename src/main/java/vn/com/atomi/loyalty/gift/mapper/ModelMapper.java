@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mapstruct.*;
+import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.*;
 import vn.com.atomi.loyalty.gift.entity.Category;
 import vn.com.atomi.loyalty.gift.entity.Gift;
+import vn.com.atomi.loyalty.gift.entity.GiftClaim;
 import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
 
 /**
@@ -58,4 +60,8 @@ public interface ModelMapper {
   List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
 
   Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
+
+  GiftClaim convertToGiftClaim(ClaimGiftInput input);
+
+  GiftClaimOutput convertToGiftClaimOutput(GiftClaim claim);
 }

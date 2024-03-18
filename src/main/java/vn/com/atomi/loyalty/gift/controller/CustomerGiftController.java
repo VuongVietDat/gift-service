@@ -11,17 +11,18 @@ import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
+import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
 
 /**
  * @author haidv
  * @version 1.0
  */
-//@RestController
+@RestController
 @RequiredArgsConstructor
 public class CustomerGiftController extends BaseController {
-
-//  private final CustomerGiftService customerGiftService;
+  private final CustomerGiftService customerGiftService;
 
   @Operation(summary = "Api (nội bộ) lấy danh sách quà của tôi")
   @PreAuthorize(Authority.ROLE_SYSTEM)
@@ -44,15 +45,15 @@ public class CustomerGiftController extends BaseController {
                   "Các điều kiện lọc: </br>1: Chưa dùng</br>2: Đã dùng</br>3: Đã dùng point để claims gift")
           @RequestParam(required = false, defaultValue = "1")
           Integer type) {
-//    return ResponseUtils.success(
-//        customerGiftService.getInternalMyGift(type, super.pageable(pageNo, pageSize, sort)));
-      return null;
+    //    return ResponseUtils.success(
+    //        customerGiftService.getInternalMyGift(type, super.pageable(pageNo, pageSize, sort)));
+    return null;
   }
 
   @Operation(summary = "Api (nội bộ) dùng point để claims gift")
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @PostMapping("/internal/claim-gifts")
-  public ResponseEntity<ResponseData<List<GiftOutput>>> internalClaimsGift(
+  public ResponseEntity<ResponseData<GiftClaimOutput>> internalClaimsGift(
       @Parameter(
               description = "Chuỗi xác thực khi gọi api nội bộ",
               example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
@@ -60,7 +61,6 @@ public class CustomerGiftController extends BaseController {
           @SuppressWarnings("unused")
           String apiKey,
       @RequestBody ClaimGiftInput claimGiftInput) {
-//    return ResponseUtils.success(customerGiftService.internalClaimsGift(claimGiftInput));
-      return null;
+    return ResponseUtils.success(customerGiftService.internalClaimsGift(claimGiftInput));
   }
 }

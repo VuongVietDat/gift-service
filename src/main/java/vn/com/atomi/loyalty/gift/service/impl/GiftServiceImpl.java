@@ -32,7 +32,7 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     // check category
     categoryRepository
         .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
-        .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+        .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_EXISTED));
 
     // check user group
     // todo: core API
@@ -61,7 +61,7 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var gift =
         giftRepository
             .findByDeletedFalseAndId(id)
-            .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+            .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
     return super.modelMapper.convertToGiftOutput(gift);
   }
 
@@ -71,12 +71,12 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var record =
         giftRepository
             .findByDeletedFalseAndId(id)
-            .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+            .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
 
     // check category
     categoryRepository
         .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
-        .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+        .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_EXISTED));
 
     // check user group
     // todo: core API

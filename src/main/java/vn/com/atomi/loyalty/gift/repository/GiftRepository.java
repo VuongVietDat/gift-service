@@ -27,6 +27,8 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
 
   Page<Gift> findAllByCategoryId(Long categoryId, Pageable pageable);
 
+  Optional<Gift> findByIdAndScores(Long id, Long scores);
+
   @Query(
       value =
           "select c "
