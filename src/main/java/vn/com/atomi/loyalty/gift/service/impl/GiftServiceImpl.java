@@ -23,6 +23,7 @@ import vn.com.atomi.loyalty.gift.utils.Utils;
 @Service
 @RequiredArgsConstructor
 public class GiftServiceImpl extends BaseService implements GiftService {
+  private final CategoryRepository categoryRepository;
   private final GiftRepository giftRepository;
   private final GiftCacheRepository giftCacheRepository;
 
@@ -30,6 +31,14 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   public void create(GiftInput input) {
     var startDate = Utils.convertToLocalDate(input.getStartDate());
     var endDate = Utils.convertToLocalDate(input.getEndDate());
+
+    // check category
+    categoryRepository
+        .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
+        .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+
+    // check user group
+    // todo: core API
 
     // tạo code
     var id = giftRepository.getSequence();
@@ -63,6 +72,14 @@ public class GiftServiceImpl extends BaseService implements GiftService {
         giftRepository
             .findByDeletedFalseAndId(id)
             .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+
+    // check category
+    categoryRepository
+        .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
+        .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+
+    // check user group
+    // todo: core API
 
     // mapping new values
     var newCampaign = super.modelMapper.mappingToGift(record, input);
