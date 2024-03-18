@@ -44,6 +44,9 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     // lưu bản ghi
     var gift = modelMapper.convertToGift(input, startDate, endDate, id, code);
     giftRepository.save(gift);
+
+    // clear cache
+    giftCacheRepository.clear();
   }
 
   @Override
@@ -82,6 +85,9 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var newCampaign = super.modelMapper.mappingToGift(record, input);
     // lưu
     giftRepository.save(newCampaign);
+
+    // clear cache
+    giftCacheRepository.clear();
   }
 
   @Override

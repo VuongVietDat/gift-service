@@ -20,10 +20,11 @@ import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 @Repository
 @RequiredArgsConstructor
 public class GiftCacheRepository {
+  private static final String KEY_PREFIX = "LOYALTY_GIFT_";
   private final RedisTemplate<String, Object> redisTemplate;
 
   private String composeHeader(Long categoryId) {
-    return "LOYALTY_GIFT_" + (categoryId == null ? "ALL" : String.valueOf(categoryId));
+    return KEY_PREFIX + (categoryId == null ? "ALL" : String.valueOf(categoryId));
   }
 
   public Optional<ResponsePage<GiftOutput>> gets(Long categoryId) {
@@ -35,5 +36,10 @@ public class GiftCacheRepository {
     redisTemplate
         .opsForValue()
         .set(composeHeader(categoryId), JsonUtils.toJson(outputs), 15, TimeUnit.MINUTES);
+  }
+
+  public void clear() {
+    var keys = redisTemplate.keys(KEY_PREFIX + '*');
+    if (keys != null) redisTemplate.delete(keys);
   }
 }
