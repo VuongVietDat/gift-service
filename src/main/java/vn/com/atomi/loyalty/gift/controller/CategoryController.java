@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
+import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ApprovalInput;
@@ -152,7 +153,13 @@ public class CategoryController extends BaseController {
   @Operation(summary = "Api (nội bộ) lấy tất cả danh mục hiệu lực")
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @PostMapping("/internal/categories")
-  public ResponseEntity<ResponseData<List<InternalCategoryOutput>>> getInternalCategories() {
+  public ResponseEntity<ResponseData<List<InternalCategoryOutput>>> getInternalCategories(
+      @Parameter(
+              description = "Chuỗi xác thực khi gọi api nội bộ",
+              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
+          @RequestHeader(RequestConstant.SECURE_API_KEY)
+          @SuppressWarnings("unused")
+          String apiKey) {
     return ResponseUtils.success(categoryService.getInternalCategories());
   }
 }
