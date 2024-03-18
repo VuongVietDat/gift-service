@@ -89,7 +89,7 @@ public class GiftInput {
   @NotNull
   private Status status;
 
-  @Schema(description = "Người dùng được đổi", example = "CIF1, CIF2,...")
+  @Schema(description = "Áp dụng với nhóm người dùng")
   @NotNull
-  private String applyUsers;
+  private Long customerGroupId;
 }

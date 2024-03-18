@@ -85,6 +85,6 @@ public class Gift extends BaseEntity {
   @Column(name = "scores")
   private Long scores;
 
-  @Column(name = "apply_users")
-  private String applyUsers;
+  @Column(name = "customer_group_id")
+  private Long customerGroupId;
 }

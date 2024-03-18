@@ -103,7 +103,7 @@ public class GiftOutput {
   @Schema(description = "Số điểm đổi")
   private Long scores;
 
-  @Schema(description = "Người dùng được đổi", example = "CIF1, CIF2,...")
+  @Schema(description = "Áp dụng với nhóm người dùng")
   @NotNull
-  private String applyUsers;
+  private Long customerGroupId;
 }
