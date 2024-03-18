@@ -44,6 +44,8 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 
     // convert
     var giftClaim = modelMapper.convertToGiftClaim(input);
+    // todo add customerID
+
     // save claims gift by quantity
     var entity = giftClaimRepository.save(giftClaim);
 
