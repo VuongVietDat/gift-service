@@ -43,7 +43,8 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   @Override
   public ResponsePage<GiftOutput> gets(Status status, String name, String code, Pageable pageable) {
     var page = giftRepository.findByCondition(code, name, status, pageable);
-    return new ResponsePage<>(page, modelMapper.convertToGiftOutputs(page.getContent()));
+    var giftOutputs = modelMapper.convertToGiftOutputs(page.getContent());
+    return new ResponsePage<>(page, giftOutputs);
   }
 
   @Override
