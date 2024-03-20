@@ -1,6 +1,5 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,8 +9,6 @@ import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 import vn.com.atomi.loyalty.gift.entity.CategoryApproval;
-import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
-import vn.com.atomi.loyalty.gift.enums.ApprovalType;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.Status;
 import vn.com.atomi.loyalty.gift.repository.CategoryRepository;
@@ -23,6 +20,7 @@ import vn.com.atomi.loyalty.gift.utils.Utils;
 @Service
 @RequiredArgsConstructor
 public class GiftServiceImpl extends BaseService implements GiftService {
+  private final CategoryRepository categoryRepository;
   private final GiftRepository giftRepository;
   private final GiftCacheRepository giftCacheRepository;
 
@@ -31,6 +29,14 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var startDate = Utils.convertToLocalDate(input.getStartDate());
     var endDate = Utils.convertToLocalDate(input.getEndDate());
 
+    // check category
+    categoryRepository
+        .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
+        .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_EXISTED));
+
+    // check user group
+    // todo: core API
+
     // tạo code
     var id = giftRepository.getSequence();
     var code = Utils.generateCode(id, CategoryApproval.class.getSimpleName());
@@ -38,6 +44,9 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     // lưu bản ghi
     var gift = modelMapper.convertToGift(input, startDate, endDate, id, code);
     giftRepository.save(gift);
+
+    // clear cache
+    giftCacheRepository.clear();
   }
 
   @Override
@@ -52,7 +61,7 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var gift =
         giftRepository
             .findByDeletedFalseAndId(id)
-            .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+            .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
     return super.modelMapper.convertToGiftOutput(gift);
   }
 
@@ -62,19 +71,30 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var record =
         giftRepository
             .findByDeletedFalseAndId(id)
-            .orElseThrow(() -> new BaseException(ErrorCode.RECORD_NOT_EXISTED));
+            .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
+
+    // check category
+    categoryRepository
+        .findByDeletedFalseAndIdAndStatus(input.getCategoryId(), Status.ACTIVE)
+        .orElseThrow(() -> new BaseException(ErrorCode.CATEGORY_NOT_EXISTED));
+
+    // check user group
+    // todo: core API
 
     // mapping new values
     var newCampaign = super.modelMapper.mappingToGift(record, input);
     // lưu
     giftRepository.save(newCampaign);
+
+    // clear cache
+    giftCacheRepository.clear();
   }
 
   @Override
-  public List<GiftOutput> getInternal(Long categoryId, Pageable pageable) {
+  public ResponsePage<GiftOutput> getInternal(Long categoryId, Pageable pageable) {
     // load cache
     var cache = giftCacheRepository.gets(categoryId);
-    if (!cache.isEmpty()) return cache;
+    if (cache.isPresent()) return cache.get();
 
     // load DB
     var page =
@@ -84,9 +104,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
 
     var outputs = modelMapper.convertToGiftOutputs(page.getContent());
 
-    // save cache
-    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputs);
+    var outputPage = new ResponsePage<>(page, outputs);
 
-    return outputs;
+    // save cache
+    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
+
+    return outputPage;
   }
 }

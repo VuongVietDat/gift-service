@@ -3,8 +3,7 @@ package vn.com.atomi.loyalty.gift.dto.input;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author haidv
@@ -12,6 +11,8 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransactionInput {
 
   @Schema(description = "ID khách hàng bên loyalty")
