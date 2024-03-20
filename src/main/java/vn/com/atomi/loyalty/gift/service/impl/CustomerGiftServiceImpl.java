@@ -1,14 +1,14 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.BaseService;
+import vn.com.atomi.loyalty.base.data.ResponsePage;
 import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.TransactionInput;
@@ -19,8 +19,9 @@ import vn.com.atomi.loyalty.gift.feign.LoyaltyCoreClient;
 import vn.com.atomi.loyalty.gift.repository.GiftClaimRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
+import vn.com.atomi.loyalty.gift.utils.GiftStatus;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +31,26 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
   private final LoyaltyCoreClient coreClient;
 
   @Override
-  public List<GiftOutput> getInternalMyGift(Integer type, Pageable pageable) {
-    return null;
+  public ResponsePage<GiftOutput> getInternalMyGift(
+      Long customerId, Integer type, Pageable pageable) {
+    // todo chua co API dung qua
+
+    // lấy quà
+    if (type == GiftStatus.CLAIMED) {
+      var page = giftClaimRepository.findByCustomerId(customerId, pageable);
+
+      return new ResponsePage<>(
+          page,
+          CollectionUtils.isEmpty(page.getContent())
+              ? new ArrayList<>()
+              : modelMapper.toGiftOutputs(page.getContent()));
+    }
+    var page = giftRepository.findAllBy(pageable);
+    return new ResponsePage<>(
+        page,
+        CollectionUtils.isEmpty(page.getContent())
+            ? new ArrayList<>()
+            : modelMapper.convertToGiftOutputs(page.getContent()));
   }
 
   @Override

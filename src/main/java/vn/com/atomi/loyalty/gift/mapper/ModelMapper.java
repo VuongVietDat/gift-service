@@ -7,6 +7,7 @@ import org.mapstruct.*;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.*;
+import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.Category;
 import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.entity.GiftClaim;
@@ -58,6 +59,7 @@ public interface ModelMapper {
   GiftOutput convertToGiftOutput(Gift gift);
 
   List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
+  List<GiftOutput> toGiftOutputs(List<GiftProjection> gifts);
 
   Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
 

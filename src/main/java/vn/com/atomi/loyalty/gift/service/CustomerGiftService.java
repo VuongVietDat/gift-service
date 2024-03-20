@@ -1,7 +1,7 @@
 package vn.com.atomi.loyalty.gift.service;
 
-import java.util.List;
 import org.springframework.data.domain.Pageable;
+import vn.com.atomi.loyalty.base.data.ResponsePage;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
@@ -12,7 +12,7 @@ import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
  */
 public interface CustomerGiftService {
 
-  List<GiftOutput> getInternalMyGift(Integer type, Pageable pageable);
+  ResponsePage<GiftOutput> getInternalMyGift(Long customerId, Integer type, Pageable pageable);
 
   GiftClaimOutput internalClaimsGift(ClaimGiftInput claimGiftInput);
 }
