@@ -82,8 +82,8 @@ public class Gift extends BaseEntity {
   @Column(name = "limit_gift_per_user")
   private Long limitGiftPerUser;
 
-  @Column(name = "scores")
-  private Long scores;
+  @Column(name = "price")
+  private Long price;
 
   @Column(name = "customer_group_id")
   private Long customerGroupId;

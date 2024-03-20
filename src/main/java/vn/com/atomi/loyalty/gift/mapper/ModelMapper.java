@@ -61,7 +61,9 @@ public interface ModelMapper {
 
   Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
 
-  GiftClaim convertToGiftClaim(ClaimGiftInput input);
+  @Mapping(target = "giftId", source = "giftId")
+  @Mapping(target = "customerId", source = "customerId")
+  GiftClaim convertToGiftClaim(ClaimGiftInput input, Long giftId, Long customerId);
 
   GiftClaimOutput convertToGiftClaimOutput(GiftClaim claim);
 }

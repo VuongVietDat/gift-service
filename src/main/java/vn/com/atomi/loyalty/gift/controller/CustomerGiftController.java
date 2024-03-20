@@ -28,12 +28,6 @@ public class CustomerGiftController extends BaseController {
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @GetMapping("/internal/my-gifts")
   public ResponseEntity<ResponseData<List<GiftOutput>>> getInternalMyGift(
-      @Parameter(
-              description = "Chuỗi xác thực khi gọi api nội bộ",
-              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
-          @RequestHeader(RequestConstant.SECURE_API_KEY)
-          @SuppressWarnings("unused")
-          String apiKey,
       @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
       @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
           Integer pageSize,
@@ -54,13 +48,7 @@ public class CustomerGiftController extends BaseController {
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @PostMapping("/internal/claim-gifts")
   public ResponseEntity<ResponseData<GiftClaimOutput>> internalClaimsGift(
-      @Parameter(
-              description = "Chuỗi xác thực khi gọi api nội bộ",
-              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
-          @RequestHeader(RequestConstant.SECURE_API_KEY)
-          @SuppressWarnings("unused")
-          String apiKey,
       @RequestBody ClaimGiftInput claimGiftInput) {
-    return ResponseUtils.success(customerGiftService.internalClaimsGift(claimGiftInput));
+    return ResponseUtils.success(customerGiftService.internalClaimsGift( claimGiftInput));
   }
 }

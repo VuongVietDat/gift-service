@@ -101,7 +101,7 @@ public class GiftOutput {
   private Long limitGiftPerUser;
 
   @Schema(description = "Số điểm đổi")
-  private Long scores;
+  private Long price;
 
   @Schema(description = "Áp dụng với nhóm người dùng")
   @NotNull

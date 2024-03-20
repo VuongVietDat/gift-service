@@ -34,4 +34,7 @@ public class GiftClaim extends BaseEntity {
 
   @Column(name = "ref_no")
   private String refNo;
+
+  @Column(name = "customer_id")
+  private String customerId;
 }

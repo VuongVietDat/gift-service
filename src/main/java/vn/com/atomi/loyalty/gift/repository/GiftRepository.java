@@ -1,14 +1,11 @@
 package vn.com.atomi.loyalty.gift.repository;
 
-import java.time.LocalDate;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import vn.com.atomi.loyalty.gift.entity.Category;
 import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
@@ -27,7 +24,7 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
 
   Page<Gift> findAllByCategoryId(Long categoryId, Pageable pageable);
 
-  Optional<Gift> findByIdAndScores(Long id, Long scores);
+  boolean existsByIdAndPrice(Long id, Long price);
 
   @Query(
       value =

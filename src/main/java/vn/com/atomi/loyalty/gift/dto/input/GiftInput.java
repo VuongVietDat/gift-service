@@ -83,7 +83,7 @@ public class GiftInput {
   private Long limitGiftPerUser;
 
   @Schema(description = "Số điểm đổi")
-  private Long scores;
+  private Long price;
 
   @Schema(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")
   @NotNull
