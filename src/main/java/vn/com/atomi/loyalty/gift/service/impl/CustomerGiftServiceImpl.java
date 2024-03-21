@@ -15,11 +15,11 @@ import vn.com.atomi.loyalty.gift.dto.input.TransactionInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
+import vn.com.atomi.loyalty.gift.enums.GiftStatus;
 import vn.com.atomi.loyalty.gift.feign.LoyaltyCoreClient;
 import vn.com.atomi.loyalty.gift.repository.GiftClaimRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
-import vn.com.atomi.loyalty.gift.utils.GiftStatus;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 
   @Override
   public ResponsePage<GiftOutput> getInternalMyGift(
-      Long customerId, Integer type, Pageable pageable) {
+      Long customerId, GiftStatus type, Pageable pageable) {
     // todo chua co API dung qua
 
     // lấy quà

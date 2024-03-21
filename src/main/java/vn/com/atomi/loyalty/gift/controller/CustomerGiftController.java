@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.enums.GiftStatus;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
 
 /**
@@ -26,6 +28,12 @@ public class CustomerGiftController extends BaseController {
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @GetMapping("/internal/my-gifts")
   public ResponseEntity<ResponseData<ResponsePage<GiftOutput>>> getInternalMyGift(
+      @Parameter(
+              description = "Chuỗi xác thực khi gọi api nội bộ",
+              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
+          @RequestHeader(RequestConstant.SECURE_API_KEY)
+          @SuppressWarnings("unused")
+          String apiKey,
       @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
       @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
           Integer pageSize,
@@ -35,9 +43,9 @@ public class CustomerGiftController extends BaseController {
       @Parameter(description = "ID của khách hàng") Long customerId,
       @Parameter(
               description =
-                  "Các điều kiện lọc: </br>1: Chưa dùng</br>2: Đã dùng</br>3: Đã dùng point để claims gift")
-          @RequestParam(required = false, defaultValue = "1")
-          Integer type) {
+                  "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>CLAIMED: Đã dùng point để claims gift")
+          @RequestParam(required = false, defaultValue = "AVAILABLE")
+          GiftStatus type) {
     return ResponseUtils.success(
         customerGiftService.getInternalMyGift(
             customerId, type, super.pageable(pageNo, pageSize, sort)));
@@ -47,6 +55,12 @@ public class CustomerGiftController extends BaseController {
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @PostMapping("/internal/claim-gifts")
   public ResponseEntity<ResponseData<GiftClaimOutput>> internalClaimsGift(
+      @Parameter(
+              description = "Chuỗi xác thực khi gọi api nội bộ",
+              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
+          @RequestHeader(RequestConstant.SECURE_API_KEY)
+          @SuppressWarnings("unused")
+          String apiKey,
       @RequestBody ClaimGiftInput claimGiftInput) {
     return ResponseUtils.success(customerGiftService.internalClaimsGift(claimGiftInput));
   }
