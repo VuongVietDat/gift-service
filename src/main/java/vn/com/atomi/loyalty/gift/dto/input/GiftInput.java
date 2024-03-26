@@ -9,6 +9,8 @@ import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
 import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
+import java.util.Date;
+
 @Data
 public class GiftInput {
   @Schema(description = "ID danh mục")
@@ -34,7 +36,7 @@ public class GiftInput {
 
   @Schema(description = "Giá trị giảm")
   @NotBlank
-  private String discountValue;
+  private Long discountValue;
 
   @Schema(description = "Ngày bắt đầu hiệu lực (dd/MM/yyyy)", example = "01/01/2024")
   @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
@@ -66,11 +68,11 @@ public class GiftInput {
 
   @Schema(description = "Ngày bắt đầu bán (dd/MM/yyyy)", example = "01/01/2024")
   @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
-  private String saleStartDate;
+  private Date saleStartDate;
 
   @Schema(description = "Ngày kết thúc bán (dd/MM/yyyy)", example = "01/01/2024")
   @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
-  private String saleEndDate;
+  private Date saleEndDate;
 
   @NotBlank
   @Schema(description = "Hạng được mua", example = "Gold")
