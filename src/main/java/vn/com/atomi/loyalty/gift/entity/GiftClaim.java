@@ -36,5 +36,5 @@ public class GiftClaim extends BaseEntity {
   private String refNo;
 
   @Column(name = "customer_id")
-  private String customerId;
+  private Long customerId;
 }

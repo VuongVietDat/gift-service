@@ -5,6 +5,8 @@ import lombok.*;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
+import java.util.Date;
+
 @Builder
 @Setter
 @Getter
@@ -44,13 +46,13 @@ public class Gift extends BaseEntity {
   private String discountType;
 
   @Column(name = "discount_value")
-  private String discountValue;
+  private Long discountValue;
 
   @Column(name = "start_date")
-  private String startDate;
+  private Date startDate;
 
   @Column(name = "end_date")
-  private String endDate;
+  private Date endDate;
 
   @Column(name = "discount_max")
   private Long discountMax;
@@ -68,10 +70,10 @@ public class Gift extends BaseEntity {
   private Long billValueMax;
 
   @Column(name = "sale_start_date")
-  private String saleStartDate;
+  private Date saleStartDate;
 
   @Column(name = "sale_end_date")
-  private String saleEndDate;
+  private Date saleEndDate;
 
   @Column(name = "rank")
   private String rank;
