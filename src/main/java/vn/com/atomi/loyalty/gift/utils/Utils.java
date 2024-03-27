@@ -28,7 +28,7 @@ public class Utils {
   }
 
   public static String makeLikeParameter(String param) {
-    return StringUtils.isBlank(param) ? null : "%|" + param + "|%";
+    return StringUtils.isBlank(param) ? null : "%" + param + "%";
   }
 
   public static LocalDateTime convertToLocalDateTime(String date) {
