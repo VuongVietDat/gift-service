@@ -4,7 +4,6 @@ import static vn.com.atomi.loyalty.base.security.Authority.Gift.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,8 +37,9 @@ public class GiftController extends BaseController {
   @Operation(summary = "Api lấy danh sách quà")
   @GetMapping("/gifts")
   public ResponseEntity<ResponseData<ResponsePage<GiftOutput>>> getCategories(
-      @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
-      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
+      @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
+          Integer pageNo,
+      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
           Integer pageSize,
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
           @RequestParam(required = false)
@@ -81,8 +81,9 @@ public class GiftController extends BaseController {
           @RequestHeader(RequestConstant.SECURE_API_KEY)
           @SuppressWarnings("unused")
           String apiKey,
-      @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
-      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
+      @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
+          Integer pageNo,
+      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
           Integer pageSize,
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
           @RequestParam(required = false)

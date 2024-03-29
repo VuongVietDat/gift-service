@@ -42,8 +42,9 @@ public class CategoryController extends BaseController {
   @Operation(summary = "Api lấy danh sách duyệt danh mục")
   @GetMapping("/categories/approvals")
   public ResponseEntity<ResponseData<ResponsePage<CategoryOutput>>> getCategoryApprovals(
-      @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
-      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
+      @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
+          Integer pageNo,
+      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
           Integer pageSize,
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
           @RequestParam(required = false)
@@ -110,8 +111,9 @@ public class CategoryController extends BaseController {
   @Operation(summary = "Api lấy danh sách danh mục")
   @GetMapping("/categories")
   public ResponseEntity<ResponseData<ResponsePage<CategoryOutput>>> getCategories(
-      @Parameter(description = "Số trang, bắt đầu từ 1") @RequestParam Integer pageNo,
-      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200") @RequestParam
+      @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
+          Integer pageNo,
+      @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
           Integer pageSize,
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
           @RequestParam(required = false)
