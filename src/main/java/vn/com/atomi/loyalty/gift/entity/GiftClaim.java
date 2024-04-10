@@ -12,29 +12,31 @@ import vn.com.atomi.loyalty.base.data.BaseEntity;
 @Entity
 @Table(name = "GS_GIFT_CLAIM")
 public class GiftClaim extends BaseEntity {
-  public static final String GENERATOR = "gs_gift_claim_id_seq";
 
   @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GENERATOR)
-  @SequenceGenerator(name = GENERATOR, sequenceName = GENERATOR, allocationSize = 1)
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GS_GIFT_CLAIM_ID_SEQ")
+  @SequenceGenerator(
+      name = "GS_GIFT_CLAIM_ID_SEQ",
+      sequenceName = "GS_GIFT_CLAIM_ID_SEQ",
+      allocationSize = 1)
   private Long id;
 
-  @Column(name = "cif_bank")
+  @Column(name = "CIF_BANK")
   private String cifBank;
 
-  @Column(name = "cif_wallet")
+  @Column(name = "CIF_WALLET")
   private String cifWallet;
 
-  @Column(name = "gift_id")
+  @Column(name = "GIFT_ID")
   private Long giftId;
 
-  @Column(name = "quantity")
+  @Column(name = "QUANTITY")
   private Long quantity;
 
-  @Column(name = "ref_no")
+  @Column(name = "REF_NO")
   private String refNo;
 
-  @Column(name = "customer_id")
+  @Column(name = "CUSTOMER_ID")
   private Long customerId;
 }

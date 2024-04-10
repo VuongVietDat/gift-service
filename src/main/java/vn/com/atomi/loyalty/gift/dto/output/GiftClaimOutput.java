@@ -1,32 +1,40 @@
 package vn.com.atomi.loyalty.gift.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import vn.com.atomi.loyalty.gift.enums.TransactionStatus;
 
+/**
+ * @author haidv
+ * @version 1.0
+ */
+@Setter
+@Getter
 public class GiftClaimOutput {
-  @Schema(description = "ID nhận quà")
-  private Long id;
+
+  @Schema(description = "Tên quà")
+  private String name;
+
+  @Schema(description = "Mã giao dịch trên loyalty")
+  private String transactionId;
 
   @Schema(description = "Mã định danh của khách hàng trên bank")
-  @NotBlank
   private String cifBank;
 
   @Schema(description = "Mã định danh của khách hàng trên ví")
-  @NotBlank
   private String cifWallet;
 
   @Schema(description = "ID của quà")
-  @NotNull
   private Long giftId;
 
-  @Schema(description = "Số lượng")
-  @NotNull
-  @Min(1)
-  private Long quantity;
+  @Schema(description = "Danh sách mã quà đã đổi")
+  private List<String> voucherCodes;
 
   @Schema(description = "Số tham chiếu")
-  @NotBlank
   private String refNo;
+
+  @Schema(description = "SUCCESS: Thành công </br>FAILURE: Thất bại")
+  private TransactionStatus transactionStatus;
 }

@@ -154,7 +154,7 @@ public class CategoryController extends BaseController {
 
   @Operation(summary = "Api (nội bộ) lấy tất cả danh mục hiệu lực")
   @PreAuthorize(Authority.ROLE_SYSTEM)
-  @PostMapping("/internal/categories")
+  @GetMapping("/internal/categories")
   public ResponseEntity<ResponseData<List<InternalCategoryOutput>>> getInternalCategories(
       @Parameter(
               description = "Chuỗi xác thực khi gọi api nội bộ",

@@ -1,11 +1,11 @@
 package vn.com.atomi.loyalty.gift.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
 import vn.com.atomi.loyalty.gift.enums.Status;
-
-import java.util.Date;
 
 @Builder
 @Setter
@@ -15,78 +15,90 @@ import java.util.Date;
 @Entity
 @Table(name = "GS_GIFT")
 public class Gift extends BaseEntity {
-  public static final String GENERATOR = "gs_gift_id_seq";
+  public static final String GENERATOR = "GS_GIFT_ID_SEQ";
 
   @Id
-  @Column(name = "id")
+  @Column(name = "ID")
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GENERATOR)
   @SequenceGenerator(name = GENERATOR, sequenceName = GENERATOR, allocationSize = 1)
   private Long id;
 
-  @Column(name = "category_id")
+  @Column(name = "CATEGORY_ID")
   private Long categoryId;
 
-  @Column(name = "name")
+  @Column(name = "NAME")
   private String name;
 
-  @Column(name = "code")
+  @Column(name = "CODE")
   private String code;
 
-  @Column(name = "status")
+  @Column(name = "STATUS")
   @Enumerated(EnumType.STRING)
   private Status status;
 
-  @Column(name = "type")
+  @Column(name = "TYPE")
   private String type;
 
-  @Column(name = "service")
+  @Column(name = "SERVICE")
   private String service;
 
-  @Column(name = "discount_type")
+  @Column(name = "DISCOUNT_TYPE")
   private String discountType;
 
-  @Column(name = "discount_value")
+  @Column(name = "DISCOUNT_VALUE")
   private Long discountValue;
 
-  @Column(name = "start_date")
-  private Date startDate;
+  @Column(name = "START_DATE")
+  private LocalDate startDate;
 
-  @Column(name = "end_date")
-  private Date endDate;
+  @Column(name = "END_DATE")
+  private LocalDate endDate;
 
-  @Column(name = "discount_max")
+  @Column(name = "DISCOUNT_MAX")
   private Long discountMax;
 
-  @Column(name = "gift_count")
+  @Column(name = "GIFT_COUNT")
   private Long giftCount;
 
-  @Column(name = "description")
+  @Column(name = "TOTAL_REMAINING")
+  private Long totalRemaining;
+
+  @Column(name = "DESCRIPTION")
   private String description;
 
-  @Column(name = "bill_value_min")
+  @Column(name = "GUIDE")
+  private String guide;
+
+  @Column(name = "TERMS_OF_USE")
+  private String termsOfUse;
+
+  @Column(name = "SUPPORT")
+  private String support;
+
+  @Column(name = "IMAGES")
+  private String images;
+
+  @Column(name = "THUMBNAIL")
+  private String thumbnail;
+
+  @Column(name = "BILL_VALUE_MIN")
   private Long billValueMin;
 
-  @Column(name = "bill_value_max")
+  @Column(name = "BILL_VALUE_MAX")
   private Long billValueMax;
 
-  @Column(name = "sale_start_date")
-  private Date saleStartDate;
+  @Column(name = "SALE_START_DATE")
+  private LocalDateTime saleStartDate;
 
-  @Column(name = "sale_end_date")
-  private Date saleEndDate;
+  @Column(name = "SALE_END_DATE")
+  private LocalDateTime saleEndDate;
 
-  @Column(name = "rank")
-  private String rank;
-
-  @Column(name = "need_approval")
+  @Column(name = "NEED_APPROVAL")
   private Boolean needApproval;
 
-  @Column(name = "limit_gift_per_user")
+  @Column(name = "LIMIT_GIFT_PER_USER")
   private Long limitGiftPerUser;
 
-  @Column(name = "price")
+  @Column(name = "PRICE")
   private Long price;
-
-  @Column(name = "customer_group_id")
-  private Long customerGroupId;
 }

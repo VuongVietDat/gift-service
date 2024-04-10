@@ -19,10 +19,10 @@ import vn.com.atomi.loyalty.gift.enums.Status;
 @NoArgsConstructor
 public class CategoryOutput {
 
-  @Schema(description = "ID chiến dịch")
+  @Schema(description = "ID danh mục")
   private Long id;
 
-  @Schema(description = "Tên chiến dịch")
+  @Schema(description = "Tên danh mục")
   private String name;
 
   @Schema(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")

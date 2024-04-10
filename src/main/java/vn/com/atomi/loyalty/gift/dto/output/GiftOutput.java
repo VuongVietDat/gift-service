@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.*;
-import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
 import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.gift.enums.Status;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GiftOutput {
+
   @Schema(description = "ID quà")
   private Long id;
 
@@ -55,12 +56,12 @@ public class GiftOutput {
   private String discountValue;
 
   @Schema(description = "Ngày bắt đầu hiệu lực (dd/MM/yyyy)", example = "01/01/2024")
-  @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
-  private String startDate;
+  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  private LocalDate startDate;
 
   @Schema(description = "Ngày kết thúc hiệu lực (dd/MM/yyyy)", example = "31/12/2024")
-  @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE, required = false)
-  private String endDate;
+  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  private LocalDate endDate;
 
   @Schema(description = "Giảm tối đa")
   @NotBlank
@@ -83,12 +84,12 @@ public class GiftOutput {
   private Long billValueMax;
 
   @Schema(description = "Ngày bắt đầu bán (dd/MM/yyyy)", example = "01/01/2024")
-  @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
-  private String saleStartDate;
+  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  private LocalDate saleStartDate;
 
   @Schema(description = "Ngày kết thúc bán (dd/MM/yyyy)", example = "01/01/2024")
-  @DateTimeValidator(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
-  private String saleEndDate;
+  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  private LocalDate saleEndDate;
 
   @NotBlank
   @Schema(description = "Hạng được mua", example = "Gold")
@@ -105,5 +106,5 @@ public class GiftOutput {
 
   @Schema(description = "Áp dụng với nhóm người dùng")
   @NotNull
-  private Long customerGroupId;
+  private List<Long> customerGroupIds;
 }

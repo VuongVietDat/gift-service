@@ -1,11 +1,9 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.BaseService;
 import vn.com.atomi.loyalty.base.data.ResponsePage;
@@ -13,15 +11,13 @@ import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.TransactionInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
-import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.dto.output.MyGiftOutput;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
-import vn.com.atomi.loyalty.gift.enums.GiftStatus;
+import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 import vn.com.atomi.loyalty.gift.feign.LoyaltyCoreClient;
 import vn.com.atomi.loyalty.gift.repository.GiftClaimRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
-
-import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -31,32 +27,32 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
   private final LoyaltyCoreClient coreClient;
 
   @Override
-  public ResponsePage<GiftOutput> getInternalMyGift(
-      Long customerId, GiftStatus type, Pageable pageable) {
+  public ResponsePage<MyGiftOutput> getInternalMyGift(
+      Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable) {
     // todo chua co API dung qua
 
     // lấy quà
-    if (type == GiftStatus.CLAIMED) {
-      var page = giftClaimRepository.findByCustomerId(customerId, pageable);
-
-      return new ResponsePage<>(
-          page,
-          CollectionUtils.isEmpty(page.getContent())
-              ? new ArrayList<>()
-              : modelMapper.toGiftOutputs(page.getContent()));
-    }
-    var page = giftRepository.findAllBy(pageable);
-    return new ResponsePage<>(
-        page,
-        CollectionUtils.isEmpty(page.getContent())
-            ? new ArrayList<>()
-            : modelMapper.convertToGiftOutputs(page.getContent()));
+    //    if (type == GiftStatus.CLAIMED) {
+    //      var page = giftClaimRepository.findByCustomerId(customerId, pageable);
+    //
+    //      return new ResponsePage<>(
+    //          page,
+    //          CollectionUtils.isEmpty(page.getContent())
+    //              ? new ArrayList<>()
+    //              : modelMapper.toGiftOutputs(page.getContent()));
+    //    }
+    //    var page = giftRepository.findAllBy(pageable);
+    //    return new ResponsePage<>(
+    //        page,
+    //        CollectionUtils.isEmpty(page.getContent())
+    //            ? new ArrayList<>()
+    //            : modelMapper.convertToGiftOutputs(page.getContent()));
+    return new ResponsePage<>();
   }
 
   @Override
   public GiftClaimOutput internalClaimsGift(ClaimGiftInput input) {
-    var requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    var requestId = requestAttributes.getRequest().getHeader(RequestConstant.REQUEST_ID);
+    var requestId = ThreadContext.get(RequestConstant.REQUEST_ID);
 
     // check bank CIF - check ví
     var res = coreClient.getCurrentBalance(requestId, input.getCifBank(), input.getCifWallet());
@@ -84,5 +80,10 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
     var entity = giftClaimRepository.save(giftClaim);
 
     return modelMapper.convertToGiftClaimOutput(entity);
+  }
+
+  @Override
+  public GiftClaimOutput internalCheckStatus(String refNo) {
+    return null;
   }
 }

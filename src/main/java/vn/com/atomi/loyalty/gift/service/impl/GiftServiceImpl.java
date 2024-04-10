@@ -1,5 +1,6 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,8 @@ import vn.com.atomi.loyalty.base.data.ResponsePage;
 import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.dto.output.InternalGiftOutput;
+import vn.com.atomi.loyalty.gift.dto.output.PreviewGiftOutput;
 import vn.com.atomi.loyalty.gift.entity.CategoryApproval;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.Status;
@@ -91,24 +94,30 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   }
 
   @Override
-  public ResponsePage<GiftOutput> getInternal(Long categoryId, Pageable pageable) {
+  public ResponsePage<InternalGiftOutput> getInternalGift(Long categoryId, Pageable pageable) {
     // load cache
-    var cache = giftCacheRepository.gets(categoryId);
-    if (cache.isPresent()) return cache.get();
+    //    var cache = giftCacheRepository.gets(categoryId);
+    //    if (cache.isPresent()) return cache.get();
+    //
+    //    // load DB
+    //    var page =
+    //        categoryId == null
+    //            ? giftRepository.findAllBy(pageable)
+    //            : giftRepository.findAllByCategoryId(categoryId, pageable);
+    //
+    //    var outputs = modelMapper.convertToGiftOutputs(page.getContent());
+    //
+    //    var outputPage = new ResponsePage<>(page, outputs);
+    //
+    //    // save cache
+    //    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
+    //
+    //    return outputPage;
+    return new ResponsePage<>();
+  }
 
-    // load DB
-    var page =
-        categoryId == null
-            ? giftRepository.findAllBy(pageable)
-            : giftRepository.findAllByCategoryId(categoryId, pageable);
-
-    var outputs = modelMapper.convertToGiftOutputs(page.getContent());
-
-    var outputPage = new ResponsePage<>(page, outputs);
-
-    // save cache
-    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
-
-    return outputPage;
+  @Override
+  public List<PreviewGiftOutput> getPartnerGift(String partnerCode) {
+    return null;
   }
 }

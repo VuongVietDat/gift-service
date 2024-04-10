@@ -11,8 +11,8 @@ import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
-import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
-import vn.com.atomi.loyalty.gift.enums.GiftStatus;
+import vn.com.atomi.loyalty.gift.dto.output.MyGiftOutput;
+import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
 
 /**
@@ -27,7 +27,7 @@ public class CustomerGiftController extends BaseController {
   @Operation(summary = "Api (nội bộ) lấy danh sách quà của tôi")
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @GetMapping("/internal/my-gifts")
-  public ResponseEntity<ResponseData<ResponsePage<GiftOutput>>> getInternalMyGift(
+  public ResponseEntity<ResponseData<ResponsePage<MyGiftOutput>>> getInternalMyGift(
       @Parameter(
               description = "Chuỗi xác thực khi gọi api nội bộ",
               example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
@@ -41,15 +41,21 @@ public class CustomerGiftController extends BaseController {
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
           @RequestParam(required = false)
           String sort,
-      @Parameter(description = "ID của khách hàng") Long customerId,
+      @Parameter(description = "Mã định danh của khách hàng trên bank")
+          @RequestParam(required = false)
+          String cifBank,
+      @Parameter(description = "Mã định danh của khách hàng trên ví")
+          @RequestParam(required = false)
+          String cifWallet,
+      @Parameter(description = "ID của khách hàng") @RequestParam(required = false) Long customerId,
       @Parameter(
               description =
-                  "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>CLAIMED: Đã dùng point để claims gift")
+                  "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng/Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
           @RequestParam(required = false, defaultValue = "AVAILABLE")
-          GiftStatus type) {
+          VoucherStatus type) {
     return ResponseUtils.success(
         customerGiftService.getInternalMyGift(
-            customerId, type, super.pageable(pageNo, pageSize, sort)));
+            customerId, cifBank, cifWallet, type, super.pageable(pageNo, pageSize, sort)));
   }
 
   @Operation(summary = "Api (nội bộ) dùng point để claims gift")
@@ -64,5 +70,19 @@ public class CustomerGiftController extends BaseController {
           String apiKey,
       @RequestBody ClaimGiftInput claimGiftInput) {
     return ResponseUtils.success(customerGiftService.internalClaimsGift(claimGiftInput));
+  }
+
+  @Operation(summary = "Api (nội bộ) kiểm tra trạng thái giao dịch đổi quà")
+  @PreAuthorize(Authority.ROLE_SYSTEM)
+  @GetMapping("/internal/transaction-status")
+  public ResponseEntity<ResponseData<GiftClaimOutput>> internalCheckStatus(
+      @Parameter(
+              description = "Chuỗi xác thực khi gọi api nội bộ",
+              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
+          @RequestHeader(RequestConstant.SECURE_API_KEY)
+          @SuppressWarnings("unused")
+          String apiKey,
+      @Parameter(description = "Số tham chiếu") @RequestParam String refNo) {
+    return ResponseUtils.success(customerGiftService.internalCheckStatus(refNo));
   }
 }

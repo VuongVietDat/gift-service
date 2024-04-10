@@ -59,6 +59,7 @@ public interface ModelMapper {
   GiftOutput convertToGiftOutput(Gift gift);
 
   List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
+
   List<GiftOutput> toGiftOutputs(List<GiftProjection> gifts);
 
   Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
@@ -68,4 +69,7 @@ public interface ModelMapper {
   GiftClaim convertToGiftClaim(ClaimGiftInput input, Long giftId, Long customerId);
 
   GiftClaimOutput convertToGiftClaimOutput(GiftClaim claim);
+
+  List<InternalCategoryOutput> convertToInternalCategoryOutputs(
+      List<Category> byDeletedFalseAndStatus);
 }

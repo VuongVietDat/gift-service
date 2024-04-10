@@ -3,15 +3,8 @@ package vn.com.atomi.loyalty.gift.service;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import vn.com.atomi.loyalty.base.data.ResponsePage;
-import vn.com.atomi.loyalty.gift.dto.input.ApprovalInput;
-import vn.com.atomi.loyalty.gift.dto.input.CategoryInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
-import vn.com.atomi.loyalty.gift.dto.output.CategoryOutput;
-import vn.com.atomi.loyalty.gift.dto.output.ComparisonOutput;
-import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
-import vn.com.atomi.loyalty.gift.dto.output.InternalCategoryOutput;
-import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
-import vn.com.atomi.loyalty.gift.enums.ApprovalType;
+import vn.com.atomi.loyalty.gift.dto.output.*;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
 /**
@@ -28,5 +21,7 @@ public interface GiftService {
 
   void update(Long id, GiftInput input);
 
-  ResponsePage<GiftOutput> getInternal(Long categoryId, Pageable pageable);
+  ResponsePage<InternalGiftOutput> getInternalGift(Long categoryId, Pageable pageable);
+
+  List<PreviewGiftOutput> getPartnerGift(String partnerCode);
 }

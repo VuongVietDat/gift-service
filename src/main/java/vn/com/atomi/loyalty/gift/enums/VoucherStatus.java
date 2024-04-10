@@ -1,6 +1,6 @@
 package vn.com.atomi.loyalty.gift.enums;
 
-public enum GiftStatus {
+public enum VoucherStatus {
   AVAILABLE,
   USED,
   CLAIMED

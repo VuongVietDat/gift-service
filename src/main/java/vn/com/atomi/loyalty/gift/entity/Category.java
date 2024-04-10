@@ -21,37 +21,37 @@ import vn.com.atomi.loyalty.gift.enums.Status;
 public class Category extends BaseEntity {
 
   @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gs_category_id_seq")
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GS_CATEGORY_ID_SEQ")
   @SequenceGenerator(
-      name = "gs_category_id_seq",
-      sequenceName = "gs_category_id_seq",
+      name = "GS_CATEGORY_ID_SEQ",
+      sequenceName = "GS_CATEGORY_ID_SEQ",
       allocationSize = 1)
   private Long id;
 
-  @Column(name = "name")
+  @Column(name = "NAME")
   private String name;
 
-  @Column(name = "code")
+  @Column(name = "CODE")
   private String code;
 
-  @Column(name = "status")
+  @Column(name = "STATUS")
   @Enumerated(EnumType.STRING)
   private Status status;
 
-  @Column(name = "order_no")
+  @Column(name = "ORDER_NO")
   private Long orderNo;
 
-  @Column(name = "category_type")
+  @Column(name = "CATEGORY_TYPE")
   @Enumerated(EnumType.STRING)
   private CategoryType categoryType;
 
-  @Column(name = "creator")
+  @Column(name = "CREATOR")
   private String creator;
 
-  @Column(name = "creation_date")
+  @Column(name = "CREATION_DATE")
   private LocalDateTime creationDate;
 
-  @Column(name = "creation_approval_date")
+  @Column(name = "CREATION_APPROVAL_DATE")
   private LocalDateTime creationApprovalDate;
 }

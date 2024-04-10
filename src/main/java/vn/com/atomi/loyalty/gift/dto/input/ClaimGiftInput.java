@@ -40,4 +40,8 @@ public class ClaimGiftInput {
   @Schema(description = "Số tham chiếu")
   @NotBlank
   private String refNo;
+
+  @Schema(description = "TRUE: Chỉ thực hiện validate, FALSE: Không thực hiện đổi quà")
+  @NotBlank
+  private boolean validation;
 }
