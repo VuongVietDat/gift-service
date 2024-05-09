@@ -24,4 +24,6 @@ public interface GiftService {
   ResponsePage<InternalGiftOutput> getInternalGift(Long categoryId, Pageable pageable);
 
   List<PreviewGiftOutput> getPartnerGift(String partnerCode);
+
+  InternalGiftOutput getInternalGift(Long id);
 }

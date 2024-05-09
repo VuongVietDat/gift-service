@@ -1,5 +1,8 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +50,48 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
     //        CollectionUtils.isEmpty(page.getContent())
     //            ? new ArrayList<>()
     //            : modelMapper.convertToGiftOutputs(page.getContent()));
-    return new ResponsePage<>();
+    return new ResponsePage<>(
+        1,
+        10,
+        2L,
+        1,
+        Arrays.asList(
+            MyGiftOutput.builder()
+                .id(2L)
+                .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+                .price(1000L)
+                .endDate(LocalDate.now().plusDays(30))
+                .thumbnail(
+                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+                .totalPoint(1000L)
+                .quantity(1L)
+                .claimsAt(LocalDateTime.now().plusDays(3))
+                .voucherStatus(VoucherStatus.CLAIMED)
+                .build(),
+            MyGiftOutput.builder()
+                .id(4L)
+                .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+                .price(1000L)
+                .endDate(LocalDate.now().plusDays(30))
+                .thumbnail(
+                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+                .totalPoint(1000L)
+                .quantity(1L)
+                .claimsAt(LocalDateTime.now().plusDays(3))
+                .voucherStatus(VoucherStatus.AVAILABLE)
+                .build(),
+            MyGiftOutput.builder()
+                .id(5L)
+                .name("(TEST KHÔNG THUỘC GROUP) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+                .price(1000L)
+                .endDate(LocalDate.now().plusDays(30))
+                .thumbnail(
+                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+                .totalPoint(1000L)
+                .quantity(1L)
+                .claimsAt(LocalDateTime.now().plusDays(3))
+                .voucherStatus(VoucherStatus.USED)
+                .build()));
   }
 
   @Override

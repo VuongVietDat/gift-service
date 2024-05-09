@@ -104,4 +104,18 @@ public class GiftController extends BaseController {
     return ResponseUtils.success(
         giftService.getInternalGift(categoryId, super.pageable(pageNo, pageSize, sort)));
   }
+
+  @Operation(summary = "Api (nội bộ) lấy chi tiết quà")
+  @PreAuthorize(Authority.ROLE_SYSTEM)
+  @GetMapping("/internal/gifts/{id}")
+  public ResponseEntity<ResponseData<InternalGiftOutput>> getInternalGift(
+      @Parameter(
+              description = "Chuỗi xác thực khi gọi api nội bộ",
+              example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")
+          @RequestHeader(RequestConstant.SECURE_API_KEY)
+          @SuppressWarnings("unused")
+          String apiKey,
+      @PathVariable Long id) {
+    return ResponseUtils.success(giftService.getInternalGift(id));
+  }
 }

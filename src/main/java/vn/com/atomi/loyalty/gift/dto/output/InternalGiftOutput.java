@@ -57,7 +57,7 @@ public class InternalGiftOutput {
   private String support;
 
   @Schema(description = "Danh sách ảnh của quà")
-  private String images;
+  private List<String> images;
 
   @Schema(description = "Ảnh nền của ưu đãi")
   private String thumbnail;

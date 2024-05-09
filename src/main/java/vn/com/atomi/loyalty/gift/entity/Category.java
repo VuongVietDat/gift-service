@@ -39,6 +39,9 @@ public class Category extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Status status;
 
+  @Column(name = "ICON")
+  private String appIcon;
+
   @Column(name = "ORDER_NO")
   private Long orderNo;
 

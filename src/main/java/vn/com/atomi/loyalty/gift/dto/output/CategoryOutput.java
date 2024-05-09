@@ -38,4 +38,7 @@ public class CategoryOutput {
   @Schema(description = "Ngày duyệt tạo (dd/MM/yyyy HH:mm:ss)")
   @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS_STROKE)
   private LocalDateTime creationApprovalDate;
+
+  @Schema(description = "icon")
+  private String appIcon;
 }
