@@ -3,6 +3,8 @@ package vn.com.atomi.loyalty.gift.service.impl;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,11 @@ import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 import vn.com.atomi.loyalty.gift.dto.output.InternalGiftOutput;
 import vn.com.atomi.loyalty.gift.dto.output.PreviewGiftOutput;
 import vn.com.atomi.loyalty.gift.entity.CategoryApproval;
+import vn.com.atomi.loyalty.gift.entity.GiftApplyAddress;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.Status;
 import vn.com.atomi.loyalty.gift.repository.CategoryRepository;
+import vn.com.atomi.loyalty.gift.repository.GiftApplyAddressRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.repository.redis.GiftCacheRepository;
 import vn.com.atomi.loyalty.gift.service.GiftService;
@@ -29,6 +33,7 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   private final CategoryRepository categoryRepository;
   private final GiftRepository giftRepository;
   private final GiftCacheRepository giftCacheRepository;
+  private final GiftApplyAddressRepository giftApplyAddressRepository;
 
   @Override
   public void create(GiftInput input) {
@@ -60,15 +65,36 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     var page = giftRepository.findByCondition(code, name, status, pageable);
     var giftOutputs = modelMapper.convertToGiftOutputs(page.getContent());
     return new ResponsePage<>(page, giftOutputs);
+  }  @Override
+  public ResponsePage<InternalGiftOutput> getsI(Status status, String name, String code, Pageable pageable) {
+    var page = giftRepository.findByCondition(code, name, status, pageable);
+    var giftOutputs = modelMapper.convertToInternalGiftOutputs(page.getContent());
+    return new ResponsePage<>(page, giftOutputs);
   }
 
   @Override
   public GiftOutput get(Long id) {
     var gift =
+            giftRepository
+                    .findByDeletedFalseAndId(id)
+                    .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
+    return super.modelMapper.convertToGiftOutput(gift);
+  }
+
+  @Override
+  public InternalGiftOutput getI(Long id) {
+    var gift =
         giftRepository
             .findByDeletedFalseAndId(id)
             .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
-    return super.modelMapper.convertToGiftOutput(gift);
+    List<GiftApplyAddress> applyAddress = giftApplyAddressRepository.findAllByGiftId(gift.getId());
+    InternalGiftOutput giftOutput = super.modelMapper.convertToInternalGiftOutput(gift);
+    List<GiftApplyAddressOutput> applyAddressOutput = applyAddress.stream()
+            .map(applyAddr -> modelMapper.convertToOutput(applyAddr)) // convertToOutput() transforms GiftApplyAddress to GiftApplyAddressOutput
+            .collect(Collectors.toList());
+
+    giftOutput.setApplyAddress(applyAddressOutput);
+    return giftOutput;
   }
 
   @Override
@@ -99,23 +125,23 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   @Override
   public ResponsePage<InternalGiftOutput> getInternalGift(Long categoryId, Pageable pageable) {
     // load cache
-    //    var cache = giftCacheRepository.gets(categoryId);
-    //    if (cache.isPresent()) return cache.get();
-    //
-    //    // load DB
-    //    var page =
-    //        categoryId == null
-    //            ? giftRepository.findAllBy(pageable)
-    //            : giftRepository.findAllByCategoryId(categoryId, pageable);
-    //
-    //    var outputs = modelMapper.convertToGiftOutputs(page.getContent());
-    //
-    //    var outputPage = new ResponsePage<>(page, outputs);
-    //
-    //    // save cache
-    //    if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
-    //
-    //    return outputPage;
+//        var cache = giftCacheRepository.gets(categoryId);
+//        if (cache.isPresent()) return cache.get();
+//
+//        // load DB
+//        var page =
+//            categoryId == null
+//                ? giftRepository.findAllBy(pageable)
+//                : giftRepository.findAllByCategoryId(categoryId, pageable);
+//
+//        var outputs = modelMapper.convertToInternalGiftOutputs(page.getContent());
+//
+//        var outputPage = new ResponsePage<>(page, outputs);
+//
+//        // save cache
+//        if (!outputs.isEmpty()) giftCacheRepository.put(categoryId, outputPage);
+//
+//        return outputPage;
     return new ResponsePage<>(
         1,
         10,
@@ -153,11 +179,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
                 .limitGiftPerUser(1L)
                 .categoryId(1L)
                 .customerGroupIds(Arrays.asList(1L, 2L))
-                .images(
-                    Arrays.asList(
-                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
-                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
-                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
+//                .images(
+//                    Arrays.asList(
+//                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
+//                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
+//                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
                 .startDate(LocalDate.now().minusDays(10))
                 .endDate(LocalDate.now().plusDays(30))
                 .thumbnail(
@@ -195,11 +221,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
                 .limitGiftPerUser(1L)
                 .categoryId(1L)
                 .customerGroupIds(Arrays.asList(1L, 2L))
-                .images(
-                    Arrays.asList(
-                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
-                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
-                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
+//                .images(
+//                    Arrays.asList(
+//                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
+//                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
+//                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
                 .startDate(LocalDate.now().minusDays(10))
                 .endDate(LocalDate.now().plusDays(30))
                 .thumbnail(
@@ -237,11 +263,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
                 .limitGiftPerUser(1L)
                 .categoryId(1L)
                 .customerGroupIds(Arrays.asList(3L))
-                .images(
-                    Arrays.asList(
-                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
-                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
-                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
+//                .images(
+//                    Arrays.asList(
+//                        "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
+//                        "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
+//                        "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
                 .startDate(LocalDate.now().minusDays(10))
                 .endDate(LocalDate.now().plusDays(30))
                 .thumbnail(
@@ -288,11 +314,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
         .limitGiftPerUser(1L)
         .categoryId(1L)
         .customerGroupIds(Arrays.asList(3L))
-        .images(
-            Arrays.asList(
-                "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
-                "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
-                "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
+//        .images(
+//            Arrays.asList(
+//                "https://lounge.mpoint.vn/images/aff216ed-b9e3-445e-a59f-5611f2687a59.jpg",
+//                "https://lounge.mpoint.vn/images/3b1ab02c-9a34-4e5c-9f89-65727349d581.jpg",
+//                "https://lounge.mpoint.vn/images/c397190c-7e55-4772-9b67-fa62d5760cd1.jpg"))
         .startDate(LocalDate.now().minusDays(10))
         .endDate(LocalDate.now().plusDays(30))
         .thumbnail("https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")

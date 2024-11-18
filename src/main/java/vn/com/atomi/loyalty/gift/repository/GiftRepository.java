@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
@@ -20,7 +21,7 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
 
   Optional<Gift> findByDeletedFalseAndId(Long id);
 
-  Page<Gift> findAllBy(Pageable pageable);
+  Page<GiftProjection> findAllBy(Pageable pageable);
 
   Page<Gift> findAllByCategoryId(Long categoryId, Pageable pageable);
 
@@ -29,7 +30,7 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
   @Query(
       value =
           "select c "
-              + "from Gift c "
+              + "from Gift c  "
               + "where c.deleted = false "
               + "  and (:code is null or c.code = :code) "
               + "  and (:name is null or c.code = :name) "

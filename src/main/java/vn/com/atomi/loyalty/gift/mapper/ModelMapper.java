@@ -10,6 +10,7 @@ import vn.com.atomi.loyalty.gift.dto.output.*;
 import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.Category;
 import vn.com.atomi.loyalty.gift.entity.Gift;
+import vn.com.atomi.loyalty.gift.entity.GiftApplyAddress;
 import vn.com.atomi.loyalty.gift.entity.GiftClaim;
 import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
 
@@ -57,11 +58,11 @@ public interface ModelMapper {
   Gift convertToGift(GiftInput input, LocalDate startDate, LocalDate endDate, Long id, String code);
 
   GiftOutput convertToGiftOutput(Gift gift);
-
+  InternalGiftOutput convertToInternalGiftOutput(Gift gift);
   List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
-
+  List<InternalGiftOutput> convertToInternalGiftOutputs(List<Gift> gifts);
   List<GiftOutput> toGiftOutputs(List<GiftProjection> gifts);
-
+  List<InternalGiftOutput> toInternalGiftOutputs(List<GiftProjection> gifts);
   Gift mappingToGift(@MappingTarget Gift gift, GiftInput giftInput);
 
   @Mapping(target = "giftId", source = "giftId")
@@ -72,4 +73,6 @@ public interface ModelMapper {
 
   List<InternalCategoryOutput> convertToInternalCategoryOutputs(
       List<Category> byDeletedFalseAndStatus);
+
+  GiftApplyAddressOutput convertToOutput(GiftApplyAddress applyAddress);
 }

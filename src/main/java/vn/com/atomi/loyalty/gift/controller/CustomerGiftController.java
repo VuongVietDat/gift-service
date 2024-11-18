@@ -11,6 +11,7 @@ import vn.com.atomi.loyalty.base.data.*;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
+import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
 import vn.com.atomi.loyalty.gift.dto.output.MyGiftOutput;
 import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
@@ -27,7 +28,7 @@ public class CustomerGiftController extends BaseController {
   @Operation(summary = "Api (nội bộ) lấy danh sách quà của tôi")
   @PreAuthorize(Authority.ROLE_SYSTEM)
   @GetMapping("/internal/my-gifts")
-  public ResponseEntity<ResponseData<ResponsePage<MyGiftOutput>>> getInternalMyGift(
+  public ResponseEntity<ResponseData<ResponsePage<GiftOutput>>> getInternalMyGift(
       @Parameter(
               description = "Chuỗi xác thực khi gọi api nội bộ",
               example = "eb6b9f6fb84a45d9c9b2ac5b2c5bac4f36606b13abcb9e2de01fa4f066968cd0")

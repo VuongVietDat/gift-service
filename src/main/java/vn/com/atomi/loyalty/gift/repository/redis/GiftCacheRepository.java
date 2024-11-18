@@ -12,6 +12,7 @@ import vn.com.atomi.loyalty.base.data.ResponsePage;
 import vn.com.atomi.loyalty.base.utils.JsonUtils;
 import vn.com.atomi.loyalty.gift.dto.output.CategoryOutput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.dto.output.InternalGiftOutput;
 
 /**
  * @author haidv
@@ -27,12 +28,12 @@ public class GiftCacheRepository {
     return KEY_PREFIX + (categoryId == null ? "ALL" : String.valueOf(categoryId));
   }
 
-  public Optional<ResponsePage<GiftOutput>> gets(Long categoryId) {
+  public Optional<ResponsePage<InternalGiftOutput>> gets(Long categoryId) {
     return Optional.ofNullable(redisTemplate.opsForValue().get(composeHeader(categoryId)))
         .map(o -> JsonUtils.fromJson((String) o, ResponsePage.class, GiftOutput.class));
   }
 
-  public void put(Long categoryId, ResponsePage<GiftOutput> outputs) {
+  public void put(Long categoryId, ResponsePage<InternalGiftOutput> outputs) {
     redisTemplate
         .opsForValue()
         .set(composeHeader(categoryId), JsonUtils.toJson(outputs), 15, TimeUnit.MINUTES);

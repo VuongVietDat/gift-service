@@ -47,6 +47,9 @@ public class InternalGiftOutput {
   @Schema(description = "Số điểm đổi")
   private Long price;
 
+  @Schema(description = "Số lượng")
+  private Long quantity;
+
   @Schema(description = "Hướng dẫn sử dụng")
   private String guide;
 
@@ -57,7 +60,7 @@ public class InternalGiftOutput {
   private String support;
 
   @Schema(description = "Danh sách ảnh của quà")
-  private List<String> images;
+  private String images;
 
   @Schema(description = "Ảnh nền của ưu đãi")
   private String thumbnail;
