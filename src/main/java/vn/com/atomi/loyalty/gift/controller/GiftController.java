@@ -94,15 +94,19 @@ public class GiftController extends BaseController {
           @SuppressWarnings("unused")
           String apiKey,
       @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
-          Integer pageNo,
+      Integer pageNo,
       @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
-          Integer pageSize,
+      Integer pageSize,
       @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
-          @RequestParam(required = false)
-          String sort,
-      @Parameter(description = "ID danh mục") @RequestParam(required = false) Long categoryId) {
+      @RequestParam(required = false)
+      String sort,
+      @Parameter(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")
+      @RequestParam(required = false)
+      Status status,
+      @Parameter(description = "Tên quà") @RequestParam(required = false) String name,
+      @Parameter(description = "Mã quà") @RequestParam(required = false) String code) {
     return ResponseUtils.success(
-        giftService.getInternalGift(categoryId, super.pageable(pageNo, pageSize, sort)));
+        giftService.getsI(status, name, code, super.pageable(pageNo, pageSize, sort)));
   }
 
   @Operation(summary = "Api (nội bộ) lấy chi tiết quà")
@@ -116,6 +120,6 @@ public class GiftController extends BaseController {
           @SuppressWarnings("unused")
           String apiKey,
       @PathVariable Long id) {
-    return ResponseUtils.success(giftService.getInternalGift(id));
+    return ResponseUtils.success(giftService.getI(id));
   }
 }

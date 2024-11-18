@@ -15,9 +15,11 @@ public interface GiftService {
 
   void create(GiftInput categoryInput);
 
+  ResponsePage<InternalGiftOutput> getsI(Status status, String name, String code, Pageable pageable);
   ResponsePage<GiftOutput> gets(Status status, String name, String code, Pageable pageable);
-
   GiftOutput get(Long id);
+
+  InternalGiftOutput getI(Long id);
 
   void update(Long id, GiftInput input);
 
