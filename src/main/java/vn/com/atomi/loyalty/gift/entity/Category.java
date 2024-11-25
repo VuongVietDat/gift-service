@@ -42,6 +42,9 @@ public class Category extends BaseEntity {
   @Column(name = "ICON")
   private String appIcon;
 
+  @Column(name = "IMAGE")
+  private String images;
+
   @Column(name = "ORDER_NO")
   private Long orderNo;
 
