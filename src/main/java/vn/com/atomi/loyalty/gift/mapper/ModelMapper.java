@@ -4,14 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mapstruct.*;
+import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
+import vn.com.atomi.loyalty.gift.dto.input.GiftPartnerInput;
 import vn.com.atomi.loyalty.gift.dto.output.*;
 import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
-import vn.com.atomi.loyalty.gift.entity.Category;
-import vn.com.atomi.loyalty.gift.entity.Gift;
-import vn.com.atomi.loyalty.gift.entity.GiftApplyAddress;
-import vn.com.atomi.loyalty.gift.entity.GiftClaim;
+import vn.com.atomi.loyalty.gift.entity.*;
 import vn.com.atomi.loyalty.gift.enums.ApprovalStatus;
 
 /**
@@ -75,4 +74,20 @@ public interface ModelMapper {
       List<Category> byDeletedFalseAndStatus);
 
   GiftApplyAddressOutput convertToOutput(GiftApplyAddress applyAddress);
+
+  @Mapping(target = "startDate", source = "startDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "endDate", source = "endDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "effectiveDate", source = "effectiveDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "expiredDate", source = "expiredDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  GiftPartner convertToGiftPartner(GiftPartnerInput input, LocalDate startDate, LocalDate endDate, LocalDate effectiveDate, LocalDate expiredDate);
+
+  List<GiftPartnerOutput> convertToGiftPartnerOutputs(List<GiftPartner> giftPartners);
+
+  @Mapping(target = "startDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "endDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "effectiveDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "expiredDate",  dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  GiftPartner mappingToGiftPartner(@MappingTarget GiftPartner giftPartner, GiftPartnerInput giftPartnerInput);
+
+  GiftPartnerOutput convertToGiftPartnerOutput(GiftPartner giftPartner);
 }

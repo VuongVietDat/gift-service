@@ -3,6 +3,9 @@ package vn.com.atomi.loyalty.gift.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
+import vn.com.atomi.loyalty.gift.enums.Status;
+
+import java.time.LocalDate;
 
 @Builder
 @Setter
@@ -21,9 +24,61 @@ public class GiftPartner extends BaseEntity {
     @SequenceGenerator(name = GENERATOR, sequenceName = GENERATOR, allocationSize = 1)
     private Long id;
 
-    @Column(name = "GIFT_ID")
-    private Long giftId;
-
     @Column(name = "PARTNER_ID")
     private Long partnerId;
+
+    @Column(name = "CATEGORY_ID")
+    private Long categoryId;
+
+    @Column(name = "NAME")
+    private String name;
+
+    @Column(name = "GIFT_TYPE")
+    private String giftType;
+
+    @Column(name = "QTY_INIT")
+    private Long qtyInit;
+
+    @Column(name = "QTY_REMAIN")
+    private Long qtyRemain;
+
+    @Column(name = "PRICE")
+    private Long price;
+
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
+
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
+
+    @Column(name = "EFFECTIVE_DATE")
+    private LocalDate effectiveDate;
+
+    @Column(name = "EXPIRED_DATE")
+    private LocalDate expiredDate;
+
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Column(name = "VISIBLE")
+    private String visible;
+
+    @Column(name = "NOTES")
+    private String notes;
+
+    @Column(name = "GUIDE")
+    private String guide;
+
+    @Column(name = "CONDITION")
+    private String condition;
+
+    @Column(name = "IMAGE")
+    private String image;
+
+    @Column(name = "THUMBNAIL")
+    private String thumbnail;
 }
