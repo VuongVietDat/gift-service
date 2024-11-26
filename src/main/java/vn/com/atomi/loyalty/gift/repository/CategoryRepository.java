@@ -16,7 +16,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
   Optional<Category> findByDeletedFalseAndIdAndStatus(Long id, Status status);
 
-  List<Category> findByDeletedFalseAndStatus(Status status);
+  List<Category> findByDeletedFalseAndStatusOrderByOrderNo(Status status);
+
+  Optional<Category> findByDeletedFalseAndId(Long id);
 
   //  @Query(
   //      value =

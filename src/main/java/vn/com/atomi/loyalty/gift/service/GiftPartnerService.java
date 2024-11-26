@@ -16,7 +16,7 @@ public interface GiftPartnerService {
 
   void create(GiftPartnerInput categoryInput);
 
-  ResponsePage<GiftPartnerOutput> getGiftPartners(Status status, String name,Long categoryId, Pageable pageable);
+  ResponsePage<GiftPartnerOutput> getGiftPartners(Status status, String name, String categorycode,Long categoryId, Pageable pageable);
 
   void update(Long id, GiftPartnerInput input);
 

@@ -82,6 +82,6 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
   @Override
   public List<InternalCategoryOutput> getInternalCategories() {
     return super.modelMapper.convertToInternalCategoryOutputs(
-        categoryRepository.findByDeletedFalseAndStatus(Status.ACTIVE));
+        categoryRepository.findByDeletedFalseAndStatusOrderByOrderNo(Status.ACTIVE));
   }
 }

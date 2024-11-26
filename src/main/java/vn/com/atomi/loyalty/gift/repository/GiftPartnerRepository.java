@@ -27,12 +27,13 @@ public interface GiftPartnerRepository extends JpaRepository<GiftPartner, Long> 
   @Query(
       value =
           "select cp "
-              + "from GiftPartner cp "
+              + "from GiftPartner cp left join Category ca on ca.id = cp.categoryId "
               + "where cp.deleted = false "
-                  + "  and (:categoryId is null or cp.categoryId = :categoryId) "
-              + "  and (:name is null or cp.name = :name) "
-              + "  and (:status is null or cp.status = :status)")
-  Page<GiftPartner> findByCondition(String name, Status status, Long categoryId,Pageable pageable);
+                  + " and (:categoryId is null or cp.categoryId = :categoryId) "
+                  + " and (:name is null or lower(cp.name) like lower('%' || :name || '%')) "
+                  + " and (:status is null or cp.status = :status)"
+                  + " and (:categorycode is null or lower(ca.code) like lower('%' || :categorycode || '%')) ")
+  Page<GiftPartner> findByCondition(String name, Status status,String categorycode, Long categoryId, Pageable pageable);
   @Query(
           value =
                   "select cp "
