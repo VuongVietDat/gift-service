@@ -58,6 +58,7 @@ public interface ModelMapper {
 
   GiftOutput convertToGiftOutput(Gift gift);
   InternalGiftOutput convertToInternalGiftOutput(Gift gift);
+  InternalGiftOutput convertPartnerGiftToGiftOutput(GiftPartner gift);
   List<GiftOutput> convertToGiftOutputs(List<Gift> gifts);
   List<InternalGiftOutput> convertToInternalGiftOutputs(List<Gift> gifts);
   List<GiftOutput> toGiftOutputs(List<GiftProjection> gifts);
@@ -82,6 +83,7 @@ public interface ModelMapper {
   GiftPartner convertToGiftPartner(GiftPartnerInput input, LocalDate startDate, LocalDate endDate, LocalDate effectiveDate, LocalDate expiredDate);
 
   List<GiftPartnerOutput> convertToGiftPartnerOutputs(List<GiftPartner> giftPartners);
+  List<InternalGiftOutput> convertGiftPartnerToGiftOutputs(List<GiftPartner> giftPartners);
 
   @Mapping(target = "startDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
   @Mapping(target = "endDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)

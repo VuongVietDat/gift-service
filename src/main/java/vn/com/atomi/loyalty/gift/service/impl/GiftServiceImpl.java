@@ -22,6 +22,7 @@ import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.Status;
 import vn.com.atomi.loyalty.gift.repository.CategoryRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftApplyAddressRepository;
+import vn.com.atomi.loyalty.gift.repository.GiftPartnerRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.repository.redis.GiftCacheRepository;
 import vn.com.atomi.loyalty.gift.service.GiftService;
@@ -34,6 +35,7 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   private final GiftRepository giftRepository;
   private final GiftCacheRepository giftCacheRepository;
   private final GiftApplyAddressRepository giftApplyAddressRepository;
+  private final GiftPartnerRepository giftPartnerRepository;
 
   @Override
   public void create(GiftInput input) {
@@ -67,9 +69,9 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     return new ResponsePage<>(page, giftOutputs);
   }  @Override
   public ResponsePage<InternalGiftOutput> getsI(Status status, String name, String code, Pageable pageable) {
-    var page = giftRepository.findByCondition(code, name, status, pageable);
-    var giftOutputs = modelMapper.convertToInternalGiftOutputs(page.getContent());
-    return new ResponsePage<>(page, giftOutputs);
+    var page = giftPartnerRepository.findByCondition(name, status, null, pageable);
+    var giftPartnerOutputs = modelMapper.convertGiftPartnerToGiftOutputs(page.getContent());
+    return new ResponsePage<>(page, giftPartnerOutputs);
   }
 
   @Override
@@ -84,11 +86,11 @@ public class GiftServiceImpl extends BaseService implements GiftService {
   @Override
   public InternalGiftOutput getI(Long id) {
     var gift =
-        giftRepository
+            giftPartnerRepository
             .findByDeletedFalseAndId(id)
             .orElseThrow(() -> new BaseException(ErrorCode.GIFT_NOT_EXISTED));
     List<GiftApplyAddress> applyAddress = giftApplyAddressRepository.findAllByGiftId(gift.getId());
-    InternalGiftOutput giftOutput = super.modelMapper.convertToInternalGiftOutput(gift);
+    InternalGiftOutput giftOutput = super.modelMapper.convertPartnerGiftToGiftOutput(gift);
     List<GiftApplyAddressOutput> applyAddressOutput = applyAddress.stream()
             .map(applyAddr -> modelMapper.convertToOutput(applyAddr)) // convertToOutput() transforms GiftApplyAddress to GiftApplyAddressOutput
             .collect(Collectors.toList());
