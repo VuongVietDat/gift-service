@@ -101,4 +101,8 @@ public class GiftPartnerOutput {
   @NotBlank
   private String thumbnail;
 
+  @Schema(description = "Mã danh mục")
+  @NotBlank
+  private String categoryCode;
+
 }

@@ -16,6 +16,7 @@ import vn.com.atomi.loyalty.gift.repository.redis.GiftCacheRepository;
 import vn.com.atomi.loyalty.gift.service.GiftPartnerService;
 import vn.com.atomi.loyalty.gift.utils.Utils;
 
+import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerService {
@@ -40,10 +41,23 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
     giftCacheRepository.clear();
   }
 
+//  @Override
+//  public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status, String name,Long categoryId, Pageable pageable) {
+//    var page = giftPartnerRepository.findByCondition(name, status, categoryId, pageable);
+//    var giftPartnerOutputs = modelMapper.convertToGiftPartnerOutputs(page.getContent());
+//    return new ResponsePage<>(page, giftPartnerOutputs);
+//  }
   @Override
   public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status, String name,Long categoryId, Pageable pageable) {
     var page = giftPartnerRepository.findByCondition(name, status, categoryId, pageable);
-    var giftPartnerOutputs = modelMapper.convertToGiftPartnerOutputs(page.getContent());
+    var giftPartnerOutputs = page.getContent().stream().map(giftPartner -> {
+      var output1 = modelMapper.convertToGiftPartnerOutput(giftPartner);
+      var category = categoryRepository.findByDeletedFalseAndId(giftPartner.getCategoryId());
+      if (category.isPresent()) {
+        output1.setCategoryCode(category.get().getCode());
+      }
+      return output1;
+    }).collect(Collectors.toList());
     return new ResponsePage<>(page, giftPartnerOutputs);
   }
 

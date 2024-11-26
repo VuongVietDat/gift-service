@@ -89,5 +89,8 @@ public interface ModelMapper {
   @Mapping(target = "expiredDate",  dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
   GiftPartner mappingToGiftPartner(@MappingTarget GiftPartner giftPartner, GiftPartnerInput giftPartnerInput);
 
+  @Mapping(target = "startDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "endDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  @Mapping(target = "categoryCode", ignore = true)
   GiftPartnerOutput convertToGiftPartnerOutput(GiftPartner giftPartner);
 }

@@ -15,9 +15,9 @@ import vn.com.atomi.loyalty.gift.enums.Status;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
   Optional<Category> findByDeletedFalseAndIdAndStatus(Long id, Status status);
-
+  Optional<Category> findAllById(Long id);
   List<Category> findByDeletedFalseAndStatus(Status status);
-
+  Optional<Category> findByDeletedFalseAndId(Long id);
   //  @Query(
   //      value =
   //          "select c "
