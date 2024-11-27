@@ -108,7 +108,7 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 
   @Override
   public ResponsePage<MyGiftOutput> getInternalMyGift(
-          Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable) {
+          Long customerId, VoucherStatus type, Pageable pageable) {
     Page<GiftClaim> giftClaimsPage = giftClaimRepository.findByCustomerIdAndType(customerId,type,pageable);
     List<MyGiftOutput> myGiftOutputs = giftClaimsPage.stream().map(giftClaim -> {
       GiftPartner giftPartner = giftPartnerRepository.findById(giftClaim.getGiftId()).orElse(null);
@@ -118,8 +118,9 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 
       return MyGiftOutput.builder()
               .id(giftClaim.getId())
+              .giftId(giftPartner.getId())
               .name(giftPartner.getName())
-              .claimsAt(giftClaim.getClaimsAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+              .claimsAt(giftClaim.getClaimsAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
               .endDate(giftClaim.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
               .totalPoint(giftClaim.getTotalPoint())
               .quantity(giftClaim.getQuantity())

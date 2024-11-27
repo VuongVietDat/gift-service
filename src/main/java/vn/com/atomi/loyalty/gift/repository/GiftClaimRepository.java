@@ -9,8 +9,6 @@ import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.GiftClaim;
 import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 
-import java.util.List;
-
 /**
  * @author haidv
  * @version 1.0

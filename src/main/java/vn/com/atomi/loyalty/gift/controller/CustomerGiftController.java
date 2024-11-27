@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.com.atomi.loyalty.base.constant.RequestConstant;
-import vn.com.atomi.loyalty.base.data.*;
+import vn.com.atomi.loyalty.base.data.BaseController;
+import vn.com.atomi.loyalty.base.data.ResponseData;
+import vn.com.atomi.loyalty.base.data.ResponsePage;
+import vn.com.atomi.loyalty.base.data.ResponseUtils;
 import vn.com.atomi.loyalty.base.security.Authority;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
@@ -34,28 +37,25 @@ public class CustomerGiftController extends BaseController {
             @RequestHeader(RequestConstant.SECURE_API_KEY)
             @SuppressWarnings("unused")
             String apiKey,
+
             @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
             Integer pageNo,
+
             @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
             Integer pageSize,
+
             @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
             @RequestParam(required = false)
             String sort,
-            @Parameter(description = "Mã định danh của khách hàng trên bank")
+
+            @Parameter(description = "ID của khách hàng")
+            @RequestParam(required = false) Long customerId,
+
+            @Parameter(description = "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>EXPIRED: Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
             @RequestParam(required = false)
-            String cifBank,
-            @Parameter(description = "Mã định danh của khách hàng trên ví")
-            @RequestParam(required = false)
-            String cifWallet,
-            @Parameter(description = "ID của khách hàng") @RequestParam(required = false) Long customerId,
-            @Parameter(
-                    description =
-                            "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng/Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
-            @RequestParam(required = false, defaultValue = "AVAILABLE")
             VoucherStatus type) {
-        return ResponseUtils.success(
-                customerGiftService.getInternalMyGift(
-                        customerId, cifBank, cifWallet, type, super.pageable(pageNo, pageSize, sort)));
+
+        return ResponseUtils.success(customerGiftService.getInternalMyGift(customerId, type, super.pageable(pageNo, pageSize, sort)));
     }
 
     @Operation(summary = "Api (nội bộ) dùng point để claims gift")

@@ -53,7 +53,7 @@ public class GiftClaim extends BaseEntity {
     @Column(name = "END_DATE")
     private Date endDate;
 
-    @Schema(description = "AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>EXPIRED/Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
+    @Schema(description = "AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>EXPIRED: Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
     @Enumerated(EnumType.STRING)
     private VoucherStatus voucherStatus;
 

@@ -14,7 +14,7 @@ import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 public interface CustomerGiftService {
 
   ResponsePage<MyGiftOutput> getInternalMyGift(
-          Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable);
+          Long customerId, VoucherStatus type, Pageable pageable);
 
   GiftClaimOutput internalClaimsGift(ClaimGiftInput claimGiftInput);
 
