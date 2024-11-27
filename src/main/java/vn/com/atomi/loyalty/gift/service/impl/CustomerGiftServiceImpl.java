@@ -1,12 +1,17 @@
 package vn.com.atomi.loyalty.gift.service.impl;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.BaseService;
 import vn.com.atomi.loyalty.base.data.ResponsePage;
@@ -14,11 +19,14 @@ import vn.com.atomi.loyalty.base.exception.BaseException;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.TransactionInput;
 import vn.com.atomi.loyalty.gift.dto.output.GiftClaimOutput;
-import vn.com.atomi.loyalty.gift.dto.output.GiftOutput;
+import vn.com.atomi.loyalty.gift.dto.output.MyGiftOutput;
+import vn.com.atomi.loyalty.gift.entity.GiftClaim;
+import vn.com.atomi.loyalty.gift.entity.GiftPartner;
 import vn.com.atomi.loyalty.gift.enums.ErrorCode;
 import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 import vn.com.atomi.loyalty.gift.feign.LoyaltyCoreClient;
 import vn.com.atomi.loyalty.gift.repository.GiftClaimRepository;
+import vn.com.atomi.loyalty.gift.repository.GiftPartnerRepository;
 import vn.com.atomi.loyalty.gift.repository.GiftRepository;
 import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
 
@@ -28,68 +36,105 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
   private final GiftRepository giftRepository;
   private final GiftClaimRepository giftClaimRepository;
   private final LoyaltyCoreClient coreClient;
+  private final GiftPartnerRepository giftPartnerRepository;
+
+//  @Override
+//  public ResponsePage<MyGiftOutput> getInternalMyGift(
+//          Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable) {
+//    // todo chua co API dung qua
+//
+//
+//
+//
+//    // lấy quà
+//    //    if (type == GiftStatus.CLAIMED) {
+//    //      var page = giftClaimRepository.findByCustomerId(customerId, pageable);
+//    //
+//    //      return new ResponsePage<>(
+//    //          page,
+//    //          CollectionUtils.isEmpty(page.getContent())
+//    //              ? new ArrayList<>()
+//    //              : modelMapper.toGiftOutputs(page.getContent()));
+//    //    }
+//    //    var page = giftRepository.findAllBy(pageable);
+//    //    return new ResponsePage<>(
+//    //        page,
+//    //        CollectionUtils.isEmpty(page.getContent())
+//    //            ? new ArrayList<>()
+//    //            : modelMapper.convertToGiftOutputs(page.getContent()));
+//    return new ResponsePage<>(
+//            1,
+//            10,
+//            2L,
+//            1,
+//            Arrays.asList(
+//                    MyGiftOutput.builder()
+//                            .id(2L)
+//                            .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+//                            .price(1000L)
+//                            .endDate(LocalDate.now().plusDays(30))
+//                            .thumbnail(
+//                                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+//                            .totalPoint(1000L)
+//                            .quantity(1L)
+//                            .claimsAt(LocalDateTime.now().plusDays(3))
+//                            .voucherStatus(VoucherStatus.CLAIMED)
+//                            .build(),
+//                    MyGiftOutput.builder()
+//                            .id(4L)
+//                            .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+//                            .price(1000L)
+//                            .endDate(LocalDate.now().plusDays(30))
+//                            .thumbnail(
+//                                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+//                            .totalPoint(1000L)
+//                            .quantity(1L)
+//                            .claimsAt(LocalDateTime.now().plusDays(3))
+//                            .voucherStatus(VoucherStatus.AVAILABLE)
+//                            .build(),
+//                    MyGiftOutput.builder()
+//                            .id(5L)
+//                            .name("(TEST KHÔNG THUỘC GROUP) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
+//                            .price(1000L)
+//                            .endDate(LocalDate.now().plusDays(30))
+//                            .thumbnail(
+//                                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
+//                            .totalPoint(1000L)
+//                            .quantity(1L)
+//                            .claimsAt(LocalDateTime.now().plusDays(3))
+//                            .voucherStatus(VoucherStatus.USED)
+//                            .build()));
+//  }
 
   @Override
-  public ResponsePage<GiftOutput> getInternalMyGift(
-      Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable) {
-    // todo chua co API dung qua
+  public ResponsePage<MyGiftOutput> getInternalMyGift(
+          Long customerId, String cifBank, String cifWallet, VoucherStatus type, Pageable pageable) {
+    Page<GiftClaim> giftClaimsPage = giftClaimRepository.findByCustomerIdAndType(customerId,type,pageable);
+    List<MyGiftOutput> myGiftOutputs = giftClaimsPage.stream().map(giftClaim -> {
+      GiftPartner giftPartner = giftPartnerRepository.findById(giftClaim.getGiftId()).orElse(null);
+      if (giftPartner == null) {
+        return null;
+      }
 
-    // lấy quà
-        if (type == VoucherStatus.CLAIMED) {
-          var page = giftClaimRepository.findByCustomerId(customerId, pageable);
+      return MyGiftOutput.builder()
+              .id(giftClaim.getId())
+              .name(giftPartner.getName())
+              .claimsAt(giftClaim.getClaimsAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+              .endDate(giftClaim.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+              .totalPoint(giftClaim.getTotalPoint())
+              .quantity(giftClaim.getQuantity())
+              .thumbnail(giftPartner.getThumbnail())
+              .price(giftClaim.getPrince())
+              .voucherStatus(giftClaim.getVoucherStatus())
+              .build();
+    }).collect(Collectors.toList());
 
-          return new ResponsePage<>(page, CollectionUtils.isEmpty(page.getContent())
-                  ? new ArrayList<>()
-                  : modelMapper.toGiftOutputs(page.getContent()));
-        }
-        var page = giftRepository.findAllBy(pageable);
-        return new ResponsePage<>(
-            page,
-            CollectionUtils.isEmpty(page.getContent())
-                ? new ArrayList<>()
-                : modelMapper.toGiftOutputs(page.getContent()));
-//    return new ResponsePage<>(
-//        1,
-//        10,
-//        2L,
-//        1,
-//        Arrays.asList(
-//            MyGiftOutput.builder()
-//                .id(2L)
-//                .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
-//                .price(1000L)
-//                .endDate(LocalDate.now().plusDays(30))
-//                .thumbnail(
-//                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
-//                .totalPoint(1000L)
-//                .quantity(1L)
-//                .claimsAt(LocalDateTime.now().plusDays(3))
-//                .voucherStatus(VoucherStatus.CLAIMED)
-//                .build(),
-//            MyGiftOutput.builder()
-//                .id(4L)
-//                .name("(TEST) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
-//                .price(1000L)
-//                .endDate(LocalDate.now().plusDays(30))
-//                .thumbnail(
-//                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
-//                .totalPoint(1000L)
-//                .quantity(1L)
-//                .claimsAt(LocalDateTime.now().plusDays(3))
-//                .voucherStatus(VoucherStatus.AVAILABLE)
-//                .build(),
-//            MyGiftOutput.builder()
-//                .id(5L)
-//                .name("(TEST KHÔNG THUỘC GROUP) Phòng khách hạng thương gia - Chuyến bay Quốc nội")
-//                .price(1000L)
-//                .endDate(LocalDate.now().plusDays(30))
-//                .thumbnail(
-//                    "https://lounge.mpoint.vn/images/eda5fcca-9884-4c07-88db-aba172277011.jpg")
-//                .totalPoint(1000L)
-//                .quantity(1L)
-//                .claimsAt(LocalDateTime.now().plusDays(3))
-//                .voucherStatus(VoucherStatus.USED)
-//                .build()));
+    return new ResponsePage<>(
+            giftClaimsPage.getNumber(),
+            giftClaimsPage.getSize(),
+            giftClaimsPage.getTotalElements(),
+            giftClaimsPage.getTotalPages(),
+            myGiftOutputs);
   }
 
   @Override
@@ -111,11 +156,11 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 
     // collect money API
     var resTrans =
-        coreClient.executeTransactionMinus(
-            requestId, new TransactionInput(cus.getCustomerId(), input.getRefNo(), fee));
+            coreClient.executeTransactionMinus(
+                    requestId, new TransactionInput(cus.getCustomerId(), input.getRefNo(), fee));
     if (resTrans.getCode() != 0)
       throw new BaseException(
-          new String[] {resTrans.getService(), resTrans.getMessage()}, ErrorCode.TRANS_ERROR);
+              new String[] {resTrans.getService(), resTrans.getMessage()}, ErrorCode.TRANS_ERROR);
 
     // save claims gift by quantity
     var giftClaim = modelMapper.convertToGiftClaim(input, input.getGiftId(), cus.getCustomerId());
