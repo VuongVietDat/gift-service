@@ -81,4 +81,15 @@ public class GiftPartner extends BaseEntity {
 
     @Column(name = "THUMBNAIL")
     private String thumbnail;
+
+    @Column(name = "LIMIT_GIFT_PER_USER")
+    private Long limitGiftPerUser;
+
+    @Column(name = "QTY_AVAIL")
+    private Long qtyAvail;
+
+    @Column(name = "QTY_ASSIGN")
+    private Long qtyAssign;
+
+
 }

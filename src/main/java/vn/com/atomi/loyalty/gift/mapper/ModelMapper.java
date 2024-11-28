@@ -85,6 +85,13 @@ public interface ModelMapper {
   List<GiftPartnerOutput> convertToGiftPartnerOutputs(List<GiftPartner> giftPartners);
   List<InternalGiftOutput> convertGiftPartnerToGiftOutputs(List<GiftPartner> giftPartners);
 
+  @Mapping(target = "giftCount", source = "qtyAvail")
+  @Mapping(target = "totalRemaining", source = "qtyRemain")
+  @Mapping(target = "description", source = "notes")
+  @Mapping(target = "termsOfUse", source = "condition")
+  @Mapping(target = "images", source = "image")
+  List<InternalGiftOutput> convertGiftPartnerToGiftOutputs(List<GiftPartner> giftPartners);
+
   @Mapping(target = "startDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
   @Mapping(target = "endDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
   @Mapping(target = "effectiveDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)

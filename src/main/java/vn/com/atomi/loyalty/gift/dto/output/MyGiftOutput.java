@@ -20,8 +20,11 @@ import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 @NoArgsConstructor
 public class MyGiftOutput {
 
-  @Schema(description = "ID quà")
+  @Schema(description = "ID lịch sử đổi quà")
   private Long id;
+
+  @Schema(description = "ID quà")
+  private Long giftId;
 
   @Schema(description = "Tên")
   private String name;
@@ -43,11 +46,10 @@ public class MyGiftOutput {
   private Long price;
 
   @Schema(description = "Thời gian đổi")
-  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS_STROKE)
-  private LocalDateTime claimsAt;
+  @JsonFormat(pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+  private LocalDate claimsAt;
 
   @Schema(
-      description =
-          "AVAILABLE: Chưa dùng</br>USED: Đã dùng/Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
+      description = "AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>EXPIRED: Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
   private VoucherStatus voucherStatus;
 }

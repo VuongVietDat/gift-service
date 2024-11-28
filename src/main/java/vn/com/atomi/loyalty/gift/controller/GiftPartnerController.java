@@ -61,9 +61,10 @@ public class GiftPartnerController extends BaseController {
           String name,
           @Parameter(description = "Id danh mục")
           @RequestParam(required = false)
-          Long categoryId) {
+          Long categoryId,
+          @Parameter(description = "Mã danh mục") @RequestParam(required = false) String categorycode) {
     return ResponseUtils.success(
-            giftPartnerService.getGiftPartners(status, name, categoryId, super.pageable(pageNo, pageSize, sort)));
+            giftPartnerService.getGiftPartners(status, name, categorycode,categoryId, super.pageable(pageNo, pageSize, sort)));
   }
 
 
