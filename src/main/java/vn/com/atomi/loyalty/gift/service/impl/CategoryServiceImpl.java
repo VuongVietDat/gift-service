@@ -51,13 +51,13 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
   @Override
   public ResponsePage<CategoryOutput> getCategories(
       Status status, String name, String code, Pageable pageable) {
-    //    var categoryPage =
-    //        categoryRepository.findByCondition(
-    //            status,
-    //            pageable);
-    //    return new ResponsePage<>(
-    //        categoryPage, super.modelMapper.convertToCategoryOutput(categoryPage.getContent()));
-    return null;
+        var categoryPage =
+            categoryRepository.findByCondition(
+                status,
+                pageable);
+        return new ResponsePage<>(
+            categoryPage, super.modelMapper.convertToCategoryOutput(categoryPage.getContent()));
+//    return null;
   }
 
   @Override

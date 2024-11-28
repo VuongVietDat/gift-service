@@ -31,13 +31,13 @@ public class GiftPartnerInput {
   @NotBlank
   private String giftType;
 
-  @Schema(description = "Số lượng")
+  @Schema(description = "Số lượng đối tác có thể cung cấp")
+  @NotBlank
+  private Long qtyAvail;
+
+  @Schema(description = "Số lượng theo đơn hàng")
   @NotBlank
   private Long qtyInit;
-
-  @Schema(description = "Số lượng còn lại")
-  @NotBlank
-  private Long qtyRemain;
 
   @Schema(description = "Điểm đổi quà")
   @NotBlank

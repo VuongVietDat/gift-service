@@ -91,5 +91,6 @@ public class GiftPartner extends BaseEntity {
     @Column(name = "QTY_ASSIGN")
     private Long qtyAssign;
 
-
+    @Column(name = "CODE")
+    private String code;
 }
