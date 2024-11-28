@@ -2,7 +2,10 @@ package vn.com.atomi.loyalty.gift.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 import vn.com.atomi.loyalty.base.data.BaseEntity;
 import vn.com.atomi.loyalty.gift.enums.CategoryType;
 import vn.com.atomi.loyalty.gift.enums.Status;
@@ -29,35 +32,34 @@ public class Category extends BaseEntity {
       allocationSize = 1)
   private Long id;
 
-  @Column(name = "NAME")
-  private String name;
-
-  @Column(name = "CODE")
+  @Size(max = 30)
+  @Column(name = "CODE", length = 30)
   private String code;
 
+  @Size(max = 255)
+  @Nationalized
+  @Column(name = "NAME", length = 200)
+  private String name;
+
+  @Size(max = 10)
   @Column(name = "STATUS")
   @Enumerated(EnumType.STRING)
   private Status status;
 
-  @Column(name = "ICON")
-  private String appIcon;
-
-  @Column(name = "IMAGE")
-  private String images;
-
   @Column(name = "ORDER_NO")
   private Long orderNo;
 
-  @Column(name = "CATEGORY_TYPE")
+  @Size(max = 100)
+  @Nationalized
+  @Column(name = "IMAGE", length = 100)
+  private String image;
+
+  @Size(max = 200)
+  @Column(name = "ICON", length = 200)
+  private String icon;
+
+  @Size(max = 20)
+  @Column(name = "TYPE", length = 20)
   @Enumerated(EnumType.STRING)
-  private CategoryType categoryType;
-
-  @Column(name = "CREATOR")
-  private String creator;
-
-  @Column(name = "CREATION_DATE")
-  private LocalDateTime creationDate;
-
-  @Column(name = "CREATION_APPROVAL_DATE")
-  private LocalDateTime creationApprovalDate;
+  private CategoryType type;
 }
