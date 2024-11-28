@@ -83,6 +83,7 @@ public interface ModelMapper {
   GiftPartner convertToGiftPartner(GiftPartnerInput input, LocalDate startDate, LocalDate endDate, LocalDate effectiveDate, LocalDate expiredDate);
 
   List<GiftPartnerOutput> convertToGiftPartnerOutputs(List<GiftPartner> giftPartners);
+  List<InternalGiftOutput> convertGiftPartnerToGiftOutputs(List<GiftPartner> giftPartners);
 
   @Mapping(target = "giftCount", source = "qtyAvail")
   @Mapping(target = "totalRemaining", source = "qtyRemain")
