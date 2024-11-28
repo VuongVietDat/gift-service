@@ -72,8 +72,8 @@ public class GiftServiceImpl extends BaseService implements GiftService {
     }
 
     @Override
-    public ResponsePage<InternalGiftOutput> getsI(Status status, String name, String code, String categorycode, Pageable pageable) {
-        var page = giftPartnerRepository.findByCondition(name, status, categorycode, null, pageable);
+    public ResponsePage<InternalGiftOutput> getsI(Long categoryId,Status status, String name, String code, String categorycode, Pageable pageable) {
+        var page = giftPartnerRepository.findByCondition(categoryId, name, status, categorycode, pageable);
 //    var giftPartnerOutputs = modelMapper.convertGiftPartnerToGiftOutputs(page.getContent());
         List<InternalGiftOutput> giftPartnerOutputs = new ArrayList<>();
         for (GiftPartner giftPartner : page.getContent()) {

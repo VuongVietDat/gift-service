@@ -42,7 +42,7 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
 
   @Override
   public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status, String name,String categorycode,Long categoryId, Pageable pageable) {
-    var page = giftPartnerRepository.findByCondition(name, status,categorycode, categoryId, pageable);
+    var page = giftPartnerRepository.findByCondition(categoryId, name, status,categorycode, pageable);
     var giftPartnerOutputs = modelMapper.convertToGiftPartnerOutputs(page.getContent());
     return new ResponsePage<>(page, giftPartnerOutputs);
   }
