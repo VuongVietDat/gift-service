@@ -41,13 +41,13 @@ public class GiftPartnerOutput {
   @NotBlank
   private String giftType;
 
-  @Schema(description = "Số lượng")
+  @Schema(description = "Số lượng đối tác có thể cung cấp")
+  @NotBlank
+  private Long qtyAvail;
+
+  @Schema(description = "Số lượng theo đơn hàng")
   @NotBlank
   private Long qtyInit;
-
-  @Schema(description = "Số lượng còn lại")
-  @NotBlank
-  private Long qtyRemain;
 
   @Schema(description = "Điểm đổi quà")
   @NotBlank
@@ -104,5 +104,9 @@ public class GiftPartnerOutput {
   @Schema(description = "Mã danh mục")
   @NotBlank
   private String categoryCode;
+
+  @Schema(description = "Mã quà")
+  @NotBlank
+  private String code;
 
 }
