@@ -34,7 +34,7 @@ public interface GiftPartnerRepository extends JpaRepository<GiftPartner, Long> 
                   + " and (:name is null or lower(cp.name) like lower('%' || :name || '%')) "
                   + " and (:status is null or cp.status = :status)"
                   + " and (:categorycode is null or lower(ca.code) like lower('%' || :categorycode || '%')) ")
-  Page<GiftPartner> findByCondition(String name, Status status,String categorycode, Long categoryId, Pageable pageable);
+  Page<GiftPartner> findByCondition(Long categoryId, String name, Status status,String categorycode, Pageable pageable);
   @Query(
           value =
                   "select cp "

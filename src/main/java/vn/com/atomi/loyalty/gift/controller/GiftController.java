@@ -105,9 +105,10 @@ public class GiftController extends BaseController {
       Status status,
       @Parameter(description = "Tên quà") @RequestParam(required = false) String name,
       @Parameter(description = "Mã quà") @RequestParam(required = false) String code,
-      @Parameter(description = "Mã danh mục") @RequestParam(required = false) String category) {
+      @Parameter(description = "Mã danh mục") @RequestParam(required = false) String category,
+      @Parameter(description = "ID danh mục") @RequestParam(required = false) Long categoryId) {
     return ResponseUtils.success(
-        giftService.getsI(status, name, code, category, super.pageable(pageNo, pageSize, sort)));
+        giftService.getsI(categoryId, status, name, code, category, super.pageable(pageNo, pageSize, sort)));
   }
 
   @Operation(summary = "Api (nội bộ) lấy chi tiết quà")

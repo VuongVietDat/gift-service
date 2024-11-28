@@ -15,7 +15,7 @@ public interface GiftService {
 
   void create(GiftInput categoryInput);
 
-  ResponsePage<InternalGiftOutput> getsI(Status status, String name, String code, String category, Pageable pageable);
+  ResponsePage<InternalGiftOutput> getsI(Long categoryId,Status status, String name, String code, String category, Pageable pageable);
   ResponsePage<GiftOutput> gets(Status status, String name, String code, Pageable pageable);
   GiftOutput get(Long id);
 

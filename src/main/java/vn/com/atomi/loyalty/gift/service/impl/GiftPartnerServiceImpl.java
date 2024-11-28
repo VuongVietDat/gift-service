@@ -39,8 +39,7 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
     // clear cache
     giftCacheRepository.clear();
   }
-
-  @Override
+  
   public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status,String effectiveDate, String name,String categorycode,Long categoryId, Pageable pageable) {
     var page = giftPartnerRepository.findListGiftPartner(status, Utils.convertToLocalDate(effectiveDate), name ,categorycode, categoryId, pageable);
     var giftPartnerOutputs = modelMapper.convertToGiftPartnerOutputs(page.getContent());
