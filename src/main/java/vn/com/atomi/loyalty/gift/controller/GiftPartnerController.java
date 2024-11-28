@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.com.atomi.loyalty.base.annotations.DateTimeValidator;
+import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.base.constant.RequestConstant;
 import vn.com.atomi.loyalty.base.data.BaseController;
 import vn.com.atomi.loyalty.base.data.ResponseData;
@@ -36,7 +38,7 @@ public class GiftPartnerController extends BaseController {
   private final GiftPartnerService giftPartnerService;
 
   @PreAuthorize(CREATE_GIFT)
-  @Operation(summary = "APi tạo mới quà doi tac")
+  @Operation(summary = "APi tạo mới quà đối tác")
   @PostMapping("/gift_partner")
   public ResponseEntity<ResponseData<Void>> createGiftPartner(@RequestBody GiftPartnerInput categoryInput) {
     giftPartnerService.create(categoryInput);
@@ -56,6 +58,10 @@ public class GiftPartnerController extends BaseController {
           @Parameter(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")
           @RequestParam(required = false)
           Status status,
+          @Parameter(description = "Thời gian hiệu lực từ ngày (dd/MM/yyyy)", example = "01/01/2024")
+          @DateTimeValidator(required = false, pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+          @RequestParam(required = false)
+          String effectiveDate,
           @Parameter(description = "Tên quà")
           @RequestParam(required = false)
           String name,
@@ -64,7 +70,7 @@ public class GiftPartnerController extends BaseController {
           Long categoryId,
           @Parameter(description = "Mã danh mục") @RequestParam(required = false) String categorycode) {
     return ResponseUtils.success(
-            giftPartnerService.getGiftPartners(status, name, categorycode,categoryId, super.pageable(pageNo, pageSize, sort)));
+            giftPartnerService.getGiftPartners(status, effectiveDate ,name,categorycode,categoryId, super.pageable(pageNo, pageSize, sort)));
   }
 
 

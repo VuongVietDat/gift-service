@@ -10,6 +10,7 @@ import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.entity.GiftPartner;
 import vn.com.atomi.loyalty.gift.enums.Status;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -42,4 +43,16 @@ public interface GiftPartnerRepository extends JpaRepository<GiftPartner, Long> 
                           + "  and (:categoryId is null or cp.categoryId = :categoryId) "
                           + "  and (:status is null or cp.status = :status)")
   Page<GiftPartner> findAllBy(Long categoryId, Pageable pageable);
+
+  @Query(
+          value =
+                  "select cp "
+                          + "from GiftPartner cp left join Category ca on ca.id = cp.categoryId "
+                          + "where cp.deleted = false "
+                          + " and (:categoryId is null or cp.categoryId = :categoryId) "
+                          + " and (:name is null or lower(cp.name) like lower('%' || :name || '%')) "
+                          + " and (:status is null or cp.status = :status)"
+                          + " and (:effectiveDate is null or cp.effectiveDate >= :effectiveDate)"
+                          + " and (:categorycode is null or lower(ca.code) like lower('%' || :categorycode || '%')) ")
+  Page<GiftPartner> findListGiftPartner(Status status, LocalDate effectiveDate, String name, String categorycode, Long categoryId, Pageable pageable);
 }
