@@ -21,4 +21,5 @@ public interface GiftPartnerService {
   void update(Long id, GiftPartnerInput input);
 
   GiftPartnerOutput get(Long id);
+
 }

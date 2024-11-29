@@ -14,10 +14,17 @@ import java.util.Date;
 
 @Data
 public class GiftPartnerInput {
-  @Schema(description = "Id đối tác")
+  @Schema(description = "Id ")
   @NotBlank
   @Size(max = 10)
   private Long partnerId;
+
+  @Schema(description = "Mã đối tác")
+  @NotBlank
+  private String partnerCode;
+
+  @Schema(description = "Mã quà")
+  private String code;
 
   @Schema(description = "Id danh mục")
   @NotBlank
@@ -32,19 +39,15 @@ public class GiftPartnerInput {
   private String giftType;
 
   @Schema(description = "Số lượng đối tác có thể cung cấp")
-  @NotBlank
   private Long qtyAvail;
 
   @Schema(description = "Số lượng theo đơn hàng")
-  @NotBlank
   private Long qtyInit;
 
   @Schema(description = "Điểm đổi quà")
-  @NotBlank
   private Long price;
 
   @Schema(description = "Đơn vị tính")
-  @NotBlank
   private String unit;
 
   @Schema(description = "Ngày bắt đầu mở bán (dd/MM/yyyy)", example = "01/01/2024")
