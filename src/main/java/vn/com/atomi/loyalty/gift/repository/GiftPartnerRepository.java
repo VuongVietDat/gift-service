@@ -56,4 +56,8 @@ public interface GiftPartnerRepository extends JpaRepository<GiftPartner, Long> 
                           + " and (:effectiveDate is null or cp.effectiveDate >= :effectiveDate)"
                           + " and (:categoryCode is null or lower(ca.code) like lower('%' || :categoryCode || '%')) ")
   Page<GiftPartner> findListGiftPartner(Status status, LocalDate effectiveDate, String name, Long partnerId ,String categoryCode, Long categoryId, Pageable pageable);
+
+  @Query("SELECT c FROM GiftPartner c WHERE c.deleted = false ORDER BY c.createdAt DESC LIMIT 1")
+  Optional<GiftPartner> findTopByOrderByCreatedAtDesc();
+  Boolean existsByCode(String partnerCode);
 }
