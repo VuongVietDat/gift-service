@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.GiftClaim;
-import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 
 /**
  * @author haidv
@@ -16,13 +15,21 @@ import vn.com.atomi.loyalty.gift.enums.VoucherStatus;
 @Repository
 public interface GiftClaimRepository extends JpaRepository<GiftClaim, Long> {
 
-  @Query("select g from Gift g join GiftClaim gc on g.id = gc.giftId" +
-          " where gc.customerId = :customerId order by g.updatedAt desc ")
-  Page<GiftProjection> findByCustomerId(Long customerId, Pageable pageable);
+//  @Query("select g from Gift g join GiftClaim gc on g.id = gc.giftId" +
+//          " where gc.customerId = :customerId order by g.updatedAt desc ")
+//  Page<GiftProjection> findByCustomerId(Long customerId, Pageable pageable);
 
   @Query("select gc from GiftClaim gc " +
           "where gc.customerId = :customerId " +
-          "and (:type is null or gc.voucherStatus = :type) " +
+          "and ((:type is null) " +
+          "or (:type = 'AVAILABLE' and gc.voucherStatus = 'AVAILABLE') " +
+          "or (:type = 'USED' and (gc.voucherStatus = 'USED' or gc.voucherStatus = 'EXPIRED'))) " +
           "order by gc.updatedAt desc")
-  Page<GiftClaim> findByCustomerIdAndType(Long customerId, VoucherStatus type, Pageable pageable);
+  Page<GiftClaim> findByCustomerIdAndType(Long customerId, String type, Pageable pageable);
+
+  @Query("select gc from GiftClaim gc " +
+          "where gc.customerId = :customerId " +
+          "order by gc.updatedAt desc")
+  Page<GiftClaim> findByCustomerId(Long customerId, Pageable pageable);
+
 }

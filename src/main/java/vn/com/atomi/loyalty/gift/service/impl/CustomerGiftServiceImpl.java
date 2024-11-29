@@ -33,10 +33,10 @@ import vn.com.atomi.loyalty.gift.service.CustomerGiftService;
 @Service
 @RequiredArgsConstructor
 public class CustomerGiftServiceImpl extends BaseService implements CustomerGiftService {
-  private final GiftRepository giftRepository;
-  private final GiftClaimRepository giftClaimRepository;
-  private final LoyaltyCoreClient coreClient;
-  private final GiftPartnerRepository giftPartnerRepository;
+    private final GiftRepository giftRepository;
+    private final GiftClaimRepository giftClaimRepository;
+    private final LoyaltyCoreClient coreClient;
+    private final GiftPartnerRepository giftPartnerRepository;
 
 //  @Override
 //  public ResponsePage<MyGiftOutput> getInternalMyGift(
@@ -106,72 +106,77 @@ public class CustomerGiftServiceImpl extends BaseService implements CustomerGift
 //                            .build()));
 //  }
 
-  @Override
-  public ResponsePage<MyGiftOutput> getInternalMyGift(
-          Long customerId, VoucherStatus type, Pageable pageable) {
-    Page<GiftClaim> giftClaimsPage = giftClaimRepository.findByCustomerIdAndType(customerId,type,pageable);
-    List<MyGiftOutput> myGiftOutputs = giftClaimsPage.stream().map(giftClaim -> {
-      GiftPartner giftPartner = giftPartnerRepository.findById(giftClaim.getGiftId()).orElse(null);
-      if (giftPartner == null) {
+    @Override
+    public ResponsePage<MyGiftOutput> getInternalMyGift(
+            Long customerId, VoucherStatus type, Pageable pageable) {
+        Page<GiftClaim> giftClaimsPage = null;
+        if (type == null) {
+            giftClaimsPage = giftClaimRepository.findByCustomerId(customerId, pageable);
+        } else {
+            giftClaimsPage = giftClaimRepository.findByCustomerIdAndType(customerId, type.name(), pageable);
+        }
+        List<MyGiftOutput> myGiftOutputs = giftClaimsPage.stream().map(giftClaim -> {
+            GiftPartner giftPartner = giftPartnerRepository.findById(giftClaim.getGiftId()).orElse(null);
+            if (giftPartner == null) {
+                return null;
+            }
+
+            return MyGiftOutput.builder()
+                    .id(giftClaim.getId())
+                    .giftId(giftPartner.getId())
+                    .name(giftPartner.getName())
+                    .claimsAt(giftClaim.getClaimsAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .endDate(giftClaim.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .totalPoint(giftClaim.getTotalPoint())
+                    .quantity(giftClaim.getQuantity())
+                    .thumbnail(giftPartner.getThumbnail())
+                    .price(giftClaim.getPrince())
+                    .voucherStatus(giftClaim.getVoucherStatus())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return new ResponsePage<>(
+                giftClaimsPage.getNumber(),
+                giftClaimsPage.getSize(),
+                giftClaimsPage.getTotalElements(),
+                giftClaimsPage.getTotalPages(),
+                myGiftOutputs);
+    }
+
+    @Override
+    public GiftClaimOutput internalClaimsGift(ClaimGiftInput input) {
+        var requestId = ThreadContext.get(RequestConstant.REQUEST_ID);
+
+        // check bank CIF - check ví
+        var res = coreClient.getCurrentBalance(requestId, input.getCifBank(), input.getCifWallet());
+        if (res.getCode() != 0) throw new BaseException(ErrorCode.CIF_NOT_EXISTED);
+        var cus = res.getData();
+
+        // check so diem hien tai cua customer
+        var fee = input.getQuantity() * input.getPrice();
+        if (fee > cus.getAvailableAmount()) throw new BaseException(ErrorCode.AMOUNT_NOT_ENOUGH);
+
+        // check gift ID, price
+        if (!giftRepository.existsByIdAndPrice(input.getGiftId(), input.getPrice()))
+            throw new BaseException(ErrorCode.GIFT_NOT_EXISTED);
+
+        // collect money API
+        var resTrans =
+                coreClient.executeTransactionMinus(
+                        requestId, new TransactionInput(cus.getCustomerId(), input.getRefNo(), fee));
+        if (resTrans.getCode() != 0)
+            throw new BaseException(
+                    new String[]{resTrans.getService(), resTrans.getMessage()}, ErrorCode.TRANS_ERROR);
+
+        // save claims gift by quantity
+        var giftClaim = modelMapper.convertToGiftClaim(input, input.getGiftId(), cus.getCustomerId());
+        var entity = giftClaimRepository.save(giftClaim);
+
+        return modelMapper.convertToGiftClaimOutput(entity);
+    }
+
+    @Override
+    public GiftClaimOutput internalCheckStatus(String refNo) {
         return null;
-      }
-
-      return MyGiftOutput.builder()
-              .id(giftClaim.getId())
-              .giftId(giftPartner.getId())
-              .name(giftPartner.getName())
-              .claimsAt(giftClaim.getClaimsAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-              .endDate(giftClaim.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-              .totalPoint(giftClaim.getTotalPoint())
-              .quantity(giftClaim.getQuantity())
-              .thumbnail(giftPartner.getThumbnail())
-              .price(giftClaim.getPrince())
-              .voucherStatus(giftClaim.getVoucherStatus())
-              .build();
-    }).collect(Collectors.toList());
-
-    return new ResponsePage<>(
-            giftClaimsPage.getNumber(),
-            giftClaimsPage.getSize(),
-            giftClaimsPage.getTotalElements(),
-            giftClaimsPage.getTotalPages(),
-            myGiftOutputs);
-  }
-
-  @Override
-  public GiftClaimOutput internalClaimsGift(ClaimGiftInput input) {
-    var requestId = ThreadContext.get(RequestConstant.REQUEST_ID);
-
-    // check bank CIF - check ví
-    var res = coreClient.getCurrentBalance(requestId, input.getCifBank(), input.getCifWallet());
-    if (res.getCode() != 0) throw new BaseException(ErrorCode.CIF_NOT_EXISTED);
-    var cus = res.getData();
-
-    // check so diem hien tai cua customer
-    var fee = input.getQuantity() * input.getPrice();
-    if (fee > cus.getAvailableAmount()) throw new BaseException(ErrorCode.AMOUNT_NOT_ENOUGH);
-
-    // check gift ID, price
-    if (!giftRepository.existsByIdAndPrice(input.getGiftId(), input.getPrice()))
-      throw new BaseException(ErrorCode.GIFT_NOT_EXISTED);
-
-    // collect money API
-    var resTrans =
-            coreClient.executeTransactionMinus(
-                    requestId, new TransactionInput(cus.getCustomerId(), input.getRefNo(), fee));
-    if (resTrans.getCode() != 0)
-      throw new BaseException(
-              new String[] {resTrans.getService(), resTrans.getMessage()}, ErrorCode.TRANS_ERROR);
-
-    // save claims gift by quantity
-    var giftClaim = modelMapper.convertToGiftClaim(input, input.getGiftId(), cus.getCustomerId());
-    var entity = giftClaimRepository.save(giftClaim);
-
-    return modelMapper.convertToGiftClaimOutput(entity);
-  }
-
-  @Override
-  public GiftClaimOutput internalCheckStatus(String refNo) {
-    return null;
-  }
+    }
 }
