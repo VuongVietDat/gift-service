@@ -40,8 +40,8 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
     giftCacheRepository.clear();
   }
   
-  public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status,String effectiveDate, String name,String categorycode,Long categoryId, Pageable pageable) {
-    var page = giftPartnerRepository.findListGiftPartner(status, Utils.convertToLocalDate(effectiveDate), name ,categorycode, categoryId, pageable);
+  public ResponsePage<GiftPartnerOutput> getGiftPartners(Status status,String effectiveDate, String name, Long partnerId,String categoryCode,Long categoryId, Pageable pageable) {
+    var page = giftPartnerRepository.findListGiftPartner(status, Utils.convertToLocalDate(effectiveDate), name , partnerId ,categoryCode, categoryId, pageable);
     var giftPartnerOutputs = modelMapper.convertToGiftPartnerOutputs(page.getContent());
     return new ResponsePage<>(page, giftPartnerOutputs);
   }
