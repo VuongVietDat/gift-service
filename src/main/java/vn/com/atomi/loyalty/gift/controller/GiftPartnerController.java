@@ -65,12 +65,15 @@ public class GiftPartnerController extends BaseController {
           @Parameter(description = "Tên quà")
           @RequestParam(required = false)
           String name,
+          @Parameter(description = "Id đối tác")
+          @RequestParam(required = false)
+          Long partnerId,
           @Parameter(description = "Id danh mục")
           @RequestParam(required = false)
           Long categoryId,
-          @Parameter(description = "Mã danh mục") @RequestParam(required = false) String categorycode) {
+          @Parameter(description = "Mã danh mục") @RequestParam(required = false) String categoryCode) {
     return ResponseUtils.success(
-            giftPartnerService.getGiftPartners(status, effectiveDate ,name,categorycode,categoryId, super.pageable(pageNo, pageSize, sort)));
+            giftPartnerService.getGiftPartners(status, effectiveDate ,name,partnerId, categoryCode,categoryId, super.pageable(pageNo, pageSize, sort)));
   }
 
 
