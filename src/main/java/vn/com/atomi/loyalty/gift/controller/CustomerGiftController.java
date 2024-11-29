@@ -49,7 +49,7 @@ public class CustomerGiftController extends BaseController {
             String sort,
 
             @Parameter(description = "ID của khách hàng")
-            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = true) Long customerId,
 
             @Parameter(description = "Các điều kiện lọc: </br>AVAILABLE: Chưa dùng</br>USED: Đã dùng</br>EXPIRED: Hết hạn</br>CLAIMED: Đã dùng point để claims gift")
             @RequestParam(required = false)
