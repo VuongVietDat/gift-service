@@ -19,5 +19,8 @@ import java.util.Optional;
  */
 @Repository
 public interface GiftApplyAddressRepository extends JpaRepository<GiftApplyAddress, Long> {
+  @Query(value =
+          "select gaa from GiftApplyAddress gaa where gaa.id= :giftId",
+          nativeQuery = true)
   List<GiftApplyAddress> findAllByGiftId(Long giftId);
 }

@@ -1,5 +1,6 @@
 package vn.com.atomi.loyalty.gift.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,4 +38,16 @@ public interface GiftRepository extends JpaRepository<Gift, Long> {
               + "  and (:status is null or c.status = :status) "
               + "order by c.updatedAt desc ")
   Page<Gift> findByCondition(String name, String code, Status status, Pageable pageable);
+
+
+  @Query(
+          value =
+                  "select c "
+                          + "from Gift c  "
+                          + "where c.deleted = false "
+                          + "  and (:code is null or c.code = :code) "
+                          + "  and (:name is null or c.code = :name) "
+                          + "  and (:status is null or c.status = :status) "
+                          + "order by c.updatedAt desc ")
+  List<Gift> getListByCondition(String name, String code, Status status);
 }
