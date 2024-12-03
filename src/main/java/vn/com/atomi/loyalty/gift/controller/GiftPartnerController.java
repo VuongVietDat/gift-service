@@ -39,14 +39,14 @@ public class GiftPartnerController extends BaseController {
 
   @PreAuthorize(CREATE_GIFT)
   @Operation(summary = "APi tạo mới quà đối tác")
-  @PostMapping("/gift_partner")
+  @PostMapping("/gift-partner")
   public ResponseEntity<ResponseData<Void>> createGiftPartner(@RequestBody GiftPartnerInput categoryInput) {
     giftPartnerService.create(categoryInput);
     return ResponseUtils.success();
   }
 
   @Operation(summary = "Api lấy danh sách quà")
-  @GetMapping("/gift_partners")
+  @GetMapping("/gift-partners")
   public ResponseEntity<ResponseData<ResponsePage<GiftPartnerOutput>>> getGiftPartners(
           @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
           Integer pageNo,
@@ -77,9 +77,54 @@ public class GiftPartnerController extends BaseController {
   }
 
 
+    @Operation(summary = "Api lấy danh sách quà ")
+    @GetMapping("/get-gift_partners")
+    public ResponseEntity<ResponseData<List<GiftPartnerOutput>>> getGiftPartners(
+            @Parameter(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")
+            @RequestParam(required = false)
+            Status status,
+            @Parameter(description = "Thời gian hiệu lực từ ngày (dd/MM/yyyy)", example = "01/01/2024")
+            @DateTimeValidator(required = false, pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+            @RequestParam(required = false)
+            String effectiveDate,
+            @Parameter(description = "Tên quà")
+            @RequestParam(required = false)
+            String name,
+            @Parameter(description = "Id đối tác")
+            @RequestParam(required = false)
+            Long partnerId,
+            @Parameter(description = "Id danh mục")
+            @RequestParam(required = false)
+            Long categoryId,
+            @Parameter(description = "Mã danh mục") @RequestParam(required = false) String categoryCode) {
+        return ResponseUtils.success(
+                giftPartnerService.getGiftPartnersList(status, effectiveDate ,name,partnerId, categoryCode,categoryId));
+    }
+
+    @Operation(summary = "Api lấy danh sách quà đối tác theo status")
+    @GetMapping("/get-gift-partners")
+    public ResponseEntity<ResponseData<ResponsePage<GiftPartnerOutput>>> getAllGiftPartners(
+            @Parameter(description = "Số trang, bắt đầu từ 1", example = "1") @RequestParam
+            Integer pageNo,
+            @Parameter(description = "Số lượng bản ghi 1 trang, tối đa 200", example = "10") @RequestParam
+            Integer pageSize,
+            @Parameter(description = "Sắp xếp, Pattern: ^[a-z0-9]+:(asc|desc)")
+            @RequestParam(required = false)
+            String sort,
+            @Parameter(description = "Trạng thái:</br> ACTIVE: Hiệu lực</br> INACTIVE: Không hiệu lực")
+            @RequestParam(required = false)
+            Status status,
+            @Parameter(description = "Thời gian hiệu lực từ ngày (dd/MM/yyyy)", example = "01/01/2024")
+            @DateTimeValidator(required = false, pattern = DateConstant.STR_PLAN_DD_MM_YYYY_STROKE)
+            @RequestParam(required = false)
+            String effectiveDate) {
+        return ResponseUtils.success(
+                giftPartnerService.getAllActiveGiftPartners(status, effectiveDate ,super.pageable(pageNo, pageSize, sort)));
+    }
+
     @PreAuthorize(UPDATE_GIFT)
     @Operation(summary = "Api cập nhật bản ghi quà theo id")
-    @PutMapping("/gift_partners/{id}")
+    @PutMapping("/gift-partners/{id}")
     public ResponseEntity<ResponseData<Void>> updateGiftPartner(
             @Parameter(description = "ID bản ghi quà") @PathVariable Long id,
             @RequestBody GiftPartnerInput categoryInput) {
@@ -87,8 +132,17 @@ public class GiftPartnerController extends BaseController {
         return ResponseUtils.success();
     }
 
+    @PreAuthorize(UPDATE_GIFT)
+    @Operation(summary = "Api cập nhật bản ghi quà theo id")
+    @PutMapping("/gift-partners/{id}")
+    public ResponseEntity<ResponseData<Void>> updateGiftPartnAfterInsertPackage(
+            ) {
+//        giftPartnerService.updateAfterInsertPackage(id, categoryInput);
+        return ResponseUtils.success();
+    }
+
     @Operation(summary = "Api lấy chi tiết bản ghi quà theo id")
-    @GetMapping("/gift_partners/{id}")
+    @GetMapping("/gift-partners/{id}")
     public ResponseEntity<ResponseData<GiftPartnerOutput>> get(
             @Parameter(description = "ID bản ghi quà") @PathVariable Long id) {
         return ResponseUtils.success(giftPartnerService.get(id));

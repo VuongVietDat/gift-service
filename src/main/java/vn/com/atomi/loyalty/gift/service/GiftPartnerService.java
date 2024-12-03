@@ -21,4 +21,8 @@ public interface GiftPartnerService {
   void update(Long id, GiftPartnerInput input);
 
   GiftPartnerOutput get(Long id);
+
+    List<GiftPartnerOutput> getGiftPartnersList(Status status, String effectiveDate, String name, Long partnerId, String categoryCode, Long categoryId);
+
+  ResponsePage<GiftPartnerOutput> getAllActiveGiftPartners(Status status, String effectiveDate, Pageable pageable);
 }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import vn.com.atomi.loyalty.gift.dto.output.GiftPartnerOutput;
 import vn.com.atomi.loyalty.gift.dto.projection.GiftProjection;
 import vn.com.atomi.loyalty.gift.entity.Gift;
 import vn.com.atomi.loyalty.gift.entity.GiftPartner;
@@ -94,5 +95,15 @@ public interface GiftPartnerRepository extends JpaRepository<GiftPartner, Long> 
                           + " and (:effectiveDate is null or cp.effectiveDate >= :effectiveDate)"
                           + " and (:categoryCode is null or lower(ca.code) like concat('%', lower(:categoryCode), '%'))"
   )
-  List<GiftPartner> findListGiftPartner2(Status status, LocalDate effectiveDate, String name, Long partnerId ,String categoryCode, Long categoryId);
+  List<GiftPartnerOutput> getListGiftPartner(Status status, LocalDate effectiveDate, String name, Long partnerId, String categoryCode, Long categoryId);
+  @Query(
+          value =
+                  "select cp "
+                          + "from GiftPartner cp "
+                          + "where cp.deleted = false "
+                          + " and (:name is null or lower(cp.name) like concat('%', lower(:name), '%')) "
+                          + " and (:status is null or cp.status = :status) "
+                          + " and (:effectiveDate is null or cp.effectiveDate >= :effectiveDate)"
+  )
+  Page<GiftPartner> getAllActiveGiftPartner(Status status, LocalDate effectiveDate, Pageable pageable);
 }

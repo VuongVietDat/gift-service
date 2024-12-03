@@ -16,6 +16,8 @@ import vn.com.atomi.loyalty.gift.repository.redis.GiftCacheRepository;
 import vn.com.atomi.loyalty.gift.service.GiftPartnerService;
 import vn.com.atomi.loyalty.gift.utils.Utils;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerService {
@@ -47,6 +49,17 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
   }
 
   @Override
+  public List<GiftPartnerOutput> getGiftPartnersList(Status status, String effectiveDate, String name, Long partnerId, String categoryCode, Long categoryId) {
+    return giftPartnerRepository.getListGiftPartner(status, Utils.convertToLocalDate(effectiveDate), name , partnerId ,categoryCode, categoryId);
+  }
+
+  @Override
+  public ResponsePage<GiftPartnerOutput> getAllActiveGiftPartners(Status status, String effectiveDate, Pageable pageable) {
+    var page = giftPartnerRepository.getAllActiveGiftPartner(status,Utils.convertToLocalDate(effectiveDate),pageable);
+    return null;
+  }
+
+  @Override
   public void update(Long id, GiftPartnerInput input) {
     // lấy record hiện tại
     var record =
@@ -74,4 +87,6 @@ public class GiftPartnerServiceImpl extends BaseService implements GiftPartnerSe
     var out =  super.modelMapper.convertToGiftPartnerOutput(giftPartner);
     return out;
   }
+
+
 }
