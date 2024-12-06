@@ -6,6 +6,7 @@ import java.util.List;
 import org.mapstruct.*;
 import vn.com.atomi.loyalty.base.constant.DateConstant;
 import vn.com.atomi.loyalty.gift.dto.input.ClaimGiftInput;
+import vn.com.atomi.loyalty.gift.dto.input.GiftClaimInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftInput;
 import vn.com.atomi.loyalty.gift.dto.input.GiftPartnerInput;
 import vn.com.atomi.loyalty.gift.dto.output.*;
@@ -55,6 +56,9 @@ public interface ModelMapper {
   @Mapping(target = "startDate", source = "startDate")
   @Mapping(target = "endDate", source = "endDate")
   Gift convertToGift(GiftInput input, LocalDate startDate, LocalDate endDate, Long id, String code);
+
+
+  GiftClaim convertToGiftGiftClaim(GiftClaimInput input);
 
   GiftOutput convertToGiftOutput(Gift gift);
   InternalGiftOutput convertToInternalGiftOutput(Gift gift);
